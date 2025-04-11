@@ -39,7 +39,6 @@ export class Spaceship implements Entity {
 
         // Translate to position
         ctx.translate(this.x, this.y);
-        ctx.scale(2, 2);
 
         // Draw name.
         ctx.textAlign = "center";

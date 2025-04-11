@@ -36,7 +36,12 @@ export class Scene {
     }
 
     private drawBackground(renderer: Renderer): void {
-        renderer.clear('#000033');
+        const gradient = renderer.context.createLinearGradient(0, 0, 0, renderer.height);
+        gradient.addColorStop(0, '#000000');
+        gradient.addColorStop(1, '#000033');
+        
+        renderer.context.fillStyle = gradient;
+        renderer.context.fillRect(0, 0, renderer.width, renderer.height);
 
         for (const star of this.stars) {
             renderer.drawCircle(star.x, star.y, star.size, '#ffffff');
