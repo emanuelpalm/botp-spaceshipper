@@ -15,23 +15,17 @@ export class Spaceship implements Entity {
         this.color = color;
     }
 
-    private getThrusterColor(t: number): string {
-        // Interpolate between red (#FF4400) and cyan (#00FFFF)
-        const r = Math.floor((144 - 251) * t + 251);
-        const g = Math.floor((250 - 68) * t + 68);
-        const b = Math.floor((255 - 156) * t + 156);
-        return `rgb(${r},${g},${b})`;
-    }
-
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
 
         // Calculate rotation angle based on velocity
         const angle = Math.atan2(this.dy, this.dx) - Math.PI/2;
         
+        // Calculate intensity (0 to 1) based on velocity
+        const intensity = (1 - 1 / (Math.sqrt(this.dx * this.dx + this.dy * this.dy) / 300 + 1));
+
         // Translate to position and rotate
         ctx.translate(this.x, this.y);
-        ctx.scale(1.25, 1.25);
         ctx.rotate(angle);
         
         // Draw body lower wings
@@ -113,25 +107,32 @@ export class Spaceship implements Entity {
         ctx.stroke();
 
         // Draw thruster
-        const velocity = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-        const relativeVelocity = (1 - 1 / (velocity / 300 + 1));
-        const thrusterBaseLength = 30 * relativeVelocity;
-        const thrusterFlickerLength = Math.max(8 * relativeVelocity, 3) * Math.random();
-        const thrusterLength = thrusterBaseLength + thrusterFlickerLength;
+        if (intensity > 0.05) {
+            const thrusterBaseLength = 30 * intensity;
+            const thrusterFlickerLength = Math.max(8 * intensity, 3) * Math.random();
+            const thrusterLength = thrusterBaseLength + thrusterFlickerLength;
 
-        ctx.beginPath();
-        ctx.moveTo(1, -3);
-        ctx.lineTo(2, -4);
-        ctx.lineTo(0, -4 - thrusterLength);
-        ctx.lineTo(-2, -4);
-        ctx.lineTo(-1, -3);
-        ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(1, -3);
+            ctx.lineTo(2, -4);
+            ctx.lineTo(0, -4 - thrusterLength);
+            ctx.lineTo(-2, -4);
+            ctx.lineTo(-1, -3);
+            ctx.closePath();
 
-        ctx.lineWidth = 1 + relativeVelocity;
-        ctx.strokeStyle = this.getThrusterColor(relativeVelocity);
-        ctx.stroke();
+            ctx.lineWidth = 1 + intensity;
+            ctx.strokeStyle = this.getThrusterColor(intensity);
+            ctx.stroke();
+        }
         
         ctx.restore();
+    }
+
+    private getThrusterColor(t: number): string {
+        const r = Math.floor((144 - 251) * t + 251);
+        const g = Math.floor((250 - 68) * t + 68);
+        const b = Math.floor((255 - 156) * t + 156);
+        return `rgb(${r},${g},${b})`;
     }
 
     update(dt: number): void {
