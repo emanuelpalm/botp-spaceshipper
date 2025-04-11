@@ -24,11 +24,11 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `
 
 const entities: Entity[] = [
-  new Spaceship(100, 100, '#5E57FF'),
-  new Spaceship(200, 200, '#F23CA6'),
-  new Spaceship(300, 300, '#FF0535'),
-  new Spaceship(400, 400, '#4BFF36'),
-  new Spaceship(500, 500, '#02FEE4'),
+  new Spaceship(100, 100, '#5E57FF', "Alpha"),
+  new Spaceship(200, 200, '#F23CA6', "Beta"),
+  new Spaceship(300, 300, '#FF0535', "Gamma"),
+  new Spaceship(400, 400, '#4BFF36', "Delta"),
+  new Spaceship(500, 500, '#02FEE4', "Epsilon"),
 ];
 
 const renderer = new Renderer('game');
