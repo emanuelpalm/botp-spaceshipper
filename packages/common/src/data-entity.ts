@@ -33,6 +33,7 @@ export interface DataSpaceship extends DataEntity {
 export interface DataText extends DataEntity {
   type: DataEntityType.Text;
   text: string;
+  font: string;
   fontSize: number;
   fontWeight: number;
 }

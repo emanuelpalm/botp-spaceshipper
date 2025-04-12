@@ -1,11 +1,15 @@
 @font-face {
-  font-family: Oxanium;
-  font-style: normal;
+  font-family: "Oxanium";
   src: local("Oxanium"), url(../ttf/oxanium.ttf) format("truetype");
 }
 
+@font-face {
+  font-family: "Smoosh Sans";
+  src: local("Smoosh Sans"), url(../ttf/smooch-sans.ttf) format("truetype");
+}
+
 :root {
-  font-family: Oxanium;
+  font-family: "Oxanium";
   line-height: 1.5;
   font-weight: 400;
 }
