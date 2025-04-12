@@ -38,7 +38,7 @@ socket.on('world-state', (state: DataState) => {
 
 socket.on("connect", () => {
   console.log("Connected");
-  document.getElementById("connection-status")!.textContent = "Connected";
+  document.getElementById("connection-status")!.textContent = "";
 });
 
 socket.on("disconnect", () => {

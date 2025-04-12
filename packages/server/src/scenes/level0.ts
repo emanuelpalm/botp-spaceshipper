@@ -13,7 +13,6 @@ const background: DataBackgroundStars = {
 
   dx: -2,
   dy: 3,
-  dz: 10,
 };
 
 // Create spaceships

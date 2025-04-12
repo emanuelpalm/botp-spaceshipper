@@ -16,5 +16,4 @@ export interface DataBackgroundStars extends DataBackground {
 
   dx: number;
   dy: number;
-  dz: number;
 }

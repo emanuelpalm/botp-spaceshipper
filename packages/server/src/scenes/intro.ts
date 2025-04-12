@@ -1,6 +1,7 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 import { ServerText } from "../entity/server-text.ts";
 import { Scene } from "../scene.ts";
+import { ServerSpaceship } from "../entity/server-spaceship.ts";
 
 const background: DataBackgroundStars = {
   type: DataBackgroundType.Stars,
@@ -8,11 +9,10 @@ const background: DataBackgroundStars = {
   width: 960,
   height: 540,
 
-  starCount: 100,
+  starCount: 200,
 
   dx: 0,
-  dy: 0,
-  dz: 100,
+  dy: -50,
 };
 
 const textTitle = new ServerText({
@@ -47,6 +47,22 @@ const textSubtitle = new ServerText({
   text: "The Spaceshipper Challenge",
 });
 
+const textWaiting = new ServerText({
+  id: "textWaiting",
+  type: DataEntityType.Text,
+
+  x: 480,
+  y: 306,
+  dx: 0,
+  dy: 0,
+
+  paletteId: PaletteId.Kappa,
+
+  fontSize: 18,
+  fontWeight: 500,
+  text: "Waiting for players to join ...",
+});
+
 class Intro extends Scene { }
 
 export const intro = new Intro(
@@ -55,5 +71,6 @@ export const intro = new Intro(
   [
     textTitle,
     textSubtitle,
+    textWaiting,
   ]
 );

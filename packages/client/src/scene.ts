@@ -27,6 +27,8 @@ export class Scene {
   private drawFps(ctx: CanvasRenderingContext2D, fps: number): void {
     ctx.fillStyle = '#ffffff80';
     ctx.font = '12px Oxanium';
-    ctx.fillText(`FPS: ${fps.toFixed(2)}`, 10, 24);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "bottom";
+    ctx.fillText(`FPS: ${fps.toFixed(2)}`, this.background.data.width - 20, this.background.data.height - 20);
   }
 }

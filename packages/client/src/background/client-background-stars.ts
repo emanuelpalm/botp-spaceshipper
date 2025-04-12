@@ -20,7 +20,7 @@ export class ClientBackgroundStars implements ClientBackground {
         size: Math.random() * 2 + 1,
         color: generateColor(),
         alpha: Math.random() * 0.9,
-        velocity: Math.random(),
+        velocity: 0.2 + Math.random() * 0.8,
       });
     }
     return stars;
@@ -46,14 +46,20 @@ export class ClientBackgroundStars implements ClientBackground {
       ctx.fillStyle = `${star.color}${alpha}`;
 
       ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      if (Math.random() > 0.05) {
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      } else {
+        const s1 = star.size + Math.random() * 0.5;
+        const s2 = s1 * 2;
+        ctx.fillRect(star.x - s1, star.y - s1, s2, s2);
+      }
       ctx.fill();
     }
   }
 
   update(dt: number): void {
     for (const star of this.stars) {
-      star.x += star.velocity * this.data.dz * dt;
+      star.x += star.velocity * this.data.dx * dt;
       star.y += star.velocity * this.data.dy * dt;
 
       if (star.x < 0) {
