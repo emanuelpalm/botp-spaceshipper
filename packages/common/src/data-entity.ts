@@ -1,4 +1,4 @@
-import { Palette } from "./palette.ts";
+import { PaletteId } from "./palette.ts";
 
 export interface DataEntity {
   id: string;
@@ -10,12 +10,19 @@ export interface DataEntity {
   dx: number;
   dy: number;
 
-  palette: Palette;
+  paletteId: PaletteId;
 }
 
 export enum DataEntityType {
-  Spaceship = 0,
-  Portal = 1,
+  Portal = 0,
+  Spaceship = 1,
+  Text = 2,
+}
+
+export interface DataPortal extends DataEntity {
+  type: DataEntityType.Portal;
+  name: string;
+  radius: number;
 }
 
 export interface DataSpaceship extends DataEntity {
@@ -23,8 +30,9 @@ export interface DataSpaceship extends DataEntity {
   name: string;
 }
 
-export interface DataPortal extends DataEntity {
-  type: DataEntityType.Portal;
-  name: string;
-  radius: number;
+export interface DataText extends DataEntity {
+  type: DataEntityType.Text;
+  text: string;
+  fontSize: number;
+  fontWeight: number;
 }

@@ -2,18 +2,18 @@ import { DataState } from '@spaceshipper/common';
 import { Scene } from './scene.ts';
 
 export class World {
-  private level: Scene;
+  private scene: Scene;
 
-  constructor(level: Scene) {
-    this.level = level;
+  constructor(scene: Scene) {
+    this.scene = scene;
   }
 
   getState(): DataState {
-    return this.level.getState();
+    return this.scene.getState();
   }
 
   update(dt: number) {
-    for (const entity of this.level.entities) {
+    for (const entity of this.scene.entities) {
       entity.update(dt);
     }
   }

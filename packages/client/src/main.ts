@@ -4,19 +4,33 @@ import { Scene } from "./scene";
 import { ClientEntity, createOrUpdateClientEntity } from "./entity/client-entity";
 import { setupCanvas } from "./canvas";
 import { DataEntity, DataState } from "@spaceshipper/common";
+import { ClientBackground, createClientBackground } from "./background/client-background";
 
-const LOGICAL_WIDTH = 960;
-const LOGICAL_HEIGHT = 540;
-
-const ctx = setupCanvas("canvas", {
-  logicalWidth: LOGICAL_WIDTH,
-  logicalHeight: LOGICAL_HEIGHT,
-});
-
-const socket = io("http://localhost:3000");
 const entities: Map<DataEntity["id"], ClientEntity> = new Map();
 
+let background: ClientBackground | undefined;
+let sceneId: string | undefined;
+let scene: Scene | undefined;
+let ctx: CanvasRenderingContext2D | undefined;
+
+const socket = io("http://localhost:3000");
+
 socket.on('world-state', (state: DataState) => {
+  if (state.sceneId !== sceneId) {
+    sceneId = state.sceneId;
+
+    entities.clear();
+
+    background = createClientBackground(state.background);
+
+    ctx = setupCanvas("canvas", {
+      logicalWidth: state.background.width,
+      logicalHeight: state.background.height,
+    });
+
+    scene = new Scene(background, entities);
+  }
+
   for (const entity of state.entities) {
     createOrUpdateClientEntity(entity, entities);
   }
@@ -32,17 +46,20 @@ socket.on("disconnect", () => {
   document.getElementById("connection-status")!.textContent = "Disconnected";
 });
 
-const scene = new Scene(entities, LOGICAL_WIDTH, LOGICAL_HEIGHT);
-
 let ts0 = performance.now();
 function gameLoop(ts1: number): void {
   const dt = (ts1 - ts0) / 1000;
   ts0 = ts1;
 
+  if (background) {
+    background.update(dt);
+  }
   for (const entity of entities.values()) {
     entity.update(dt);
   }
-  scene.draw(ctx, dt);
+  if (ctx && scene) {
+    scene.draw(ctx, dt);
+  }
 
   requestAnimationFrame(gameLoop);
 }

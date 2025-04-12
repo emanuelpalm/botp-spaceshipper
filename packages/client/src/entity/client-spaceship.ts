@@ -1,11 +1,14 @@
 import { ClientEntity } from "./client-entity";
-import { DataSpaceship } from "@spaceshipper/common";
+import { DataSpaceship, getPalette, Palette } from "@spaceshipper/common";
 
 export class ClientSpaceship implements ClientEntity {
   public data: DataSpaceship;
 
+  private palette: Palette;
+
   constructor(data: DataSpaceship) {
     this.data = data;
+    this.palette = getPalette(data.paletteId);
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -33,7 +36,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(6, -16);
     ctx.lineTo(12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.data.palette.tint, 1, this.data.palette.secondary);
+    this.stroke(ctx, 3, this.palette.tint, 1, this.palette.secondary);
 
     // Draw body lower right wing
     ctx.beginPath();
@@ -43,7 +46,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-6, -16);
     ctx.lineTo(-12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.data.palette.tint, 1, this.data.palette.secondary);
+    this.stroke(ctx, 3, this.palette.tint, 1, this.palette.secondary);
 
     // Draw body center
     ctx.beginPath();
@@ -55,7 +58,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-3, -12);
     ctx.lineTo(-2, -15);
     ctx.closePath();
-    this.stroke(ctx, 3.5, this.data.palette.tint, 1.5, this.data.palette.secondary);
+    this.stroke(ctx, 3.5, this.palette.tint, 1.5, this.palette.secondary);
 
     // Draw body upper left wing
     ctx.beginPath();
@@ -66,7 +69,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(9, 1);
     ctx.lineTo(6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.data.palette.tint, 2, this.data.palette.primary);
+    this.stroke(ctx, 4, this.palette.tint, 2, this.palette.primary);
 
     // Draw body upper right wing
     ctx.beginPath();
@@ -77,7 +80,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-9, 1);
     ctx.lineTo(-6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.data.palette.tint, 2, this.data.palette.primary);
+    this.stroke(ctx, 4, this.palette.tint, 2, this.palette.primary);
 
     // Draw thruster
     if (intensity > 0.05) {

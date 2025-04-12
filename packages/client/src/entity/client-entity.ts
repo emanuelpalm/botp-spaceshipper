@@ -1,6 +1,7 @@
-import { DataEntity, DataPortal, DataSpaceship, DataEntityType } from "@spaceshipper/common"
+import { DataEntity, DataEntityType, DataPortal, DataSpaceship, DataText } from "@spaceshipper/common";
 import { ClientPortal } from "./client-portal";
 import { ClientSpaceship } from "./client-spaceship";
+import { ClientText } from "./client-text";
 
 export interface ClientEntity {
   data: DataEntity
@@ -17,8 +18,13 @@ export function createOrUpdateClientEntity(data: DataEntity, map: Map<DataEntity
       case DataEntityType.Spaceship:
         entity = new ClientSpaceship(data as DataSpaceship);
         break;
+
       case DataEntityType.Portal:
         entity = new ClientPortal(data as DataPortal);
+        break;
+
+      case DataEntityType.Text:
+        entity = new ClientText(data as DataText);
         break;
 
       default:

@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { World } from "./world.ts";
-import { level0 } from "./scenes/level0.ts";
+import { intro } from "./scenes/intro.ts";
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -13,7 +13,7 @@ const io = new Server(httpServer, {
   }
 });
 
-const world = new World(level0);
+const world = new World(intro);
 const UPDATE_RATE = 20; // Updates per second
 const UPDATE_INTERVAL = 1000 / UPDATE_RATE;
 let lastUpdate = performance.now();
