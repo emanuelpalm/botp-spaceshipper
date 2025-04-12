@@ -1,2 +1,2 @@
-export type { Entity } from "./entity";
-export { Spaceship } from "./spaceship";
+export type { ClientEntity } from "./entity";
+export { ClientSpaceship as ClientSpaceship } from "./spaceship";

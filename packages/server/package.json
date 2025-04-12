@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@spaceshipper/server",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -9,14 +9,14 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "socket.io": "^4.7.2"
+    "@spaceshipper/common": "*",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
-    "@types/socket.io": "^3.0.1",
-    "nodemon": "^3.0.2",
+    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

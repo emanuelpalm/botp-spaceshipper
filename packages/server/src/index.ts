@@ -1,6 +1,8 @@
-import express, { Express } from 'express';
-import { createServer } from 'http';
-import { Server, Socket } from 'socket.io';
+import express, { Express } from "express";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+import { World } from "./world.ts";
+import { level0 } from "./scenes/level0.ts";
 
 const app: Express = express();
 const httpServer = createServer(app);
@@ -11,11 +13,29 @@ const io = new Server(httpServer, {
   }
 });
 
-io.on('connection', (socket: Socket) => {
-  console.log('A user connected');
+const world = new World(level0);
+const UPDATE_RATE = 20; // Updates per second
+const UPDATE_INTERVAL = 1000 / UPDATE_RATE;
+let lastUpdate = performance.now();
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
+// Game loop
+setInterval(() => {
+  const now = performance.now();
+  const dt = (now - lastUpdate) / 1000;
+  lastUpdate = now;
+
+  world.update(dt);
+  io.emit("world-state", world.state);
+}, UPDATE_INTERVAL);
+
+io.on("connection", (socket: Socket) => {
+  console.log("A user connected");
+  
+  // Send initial state to new client
+  socket.emit("world-state", world.state);
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
