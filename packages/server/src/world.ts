@@ -1,3 +1,4 @@
+import { DataState } from '@spaceshipper/common';
 import { Scene } from './scene.ts';
 
 export class World {
@@ -7,15 +8,13 @@ export class World {
     this.level = level;
   }
 
-  get state() {
-    return this.level;
+  getState(): DataState {
+    return this.level.getState();
   }
 
   update(dt: number) {
     for (const entity of this.level.entities) {
-      // Update positions
-      entity.x += entity.dx * dt;
-      entity.y += entity.dy * dt;
+      entity.update(dt);
     }
   }
 }

@@ -25,14 +25,14 @@ setInterval(() => {
   lastUpdate = now;
 
   world.update(dt);
-  io.emit("world-state", world.state);
+  io.emit("world-state", world.getState());
 }, UPDATE_INTERVAL);
 
 io.on("connection", (socket: Socket) => {
   console.log("A user connected");
-  
+
   // Send initial state to new client
-  socket.emit("world-state", world.state);
+  socket.emit("world-state", world.getState());
 
   socket.on("disconnect", () => {
     console.log("User disconnected");

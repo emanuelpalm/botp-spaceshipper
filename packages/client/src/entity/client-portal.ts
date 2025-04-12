@@ -1,5 +1,5 @@
 import { DataPortal } from "@spaceshipper/common";
-import { ClientEntity } from "./entity";
+import { ClientEntity } from "./client-entity";
 
 export class ClientPortal implements ClientEntity {
   public data: DataPortal;
@@ -22,11 +22,11 @@ export class ClientPortal implements ClientEntity {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `12px Arial`;
-    ctx.fillStyle = this.data.primaryColor;
+    ctx.fillStyle = this.data.palette.primary;
     ctx.fillText(this.data.name, 0, -26);
 
     // Draw cross in the middle
-    ctx.strokeStyle = this.data.secondaryColor;
+    ctx.strokeStyle = this.data.palette.secondary;
     ctx.lineWidth = 2;
 
     const crossSize = Math.min(this.data.radius, 10); // Cross size is 20% of radius
@@ -41,8 +41,8 @@ export class ClientPortal implements ClientEntity {
 
     // Draw outer dashed circle
     ctx.rotate(this.clock / 2 + Math.random() * 0.01);
-    ctx.fillStyle = `${this.data.tintColor}${Math.floor(18 + 2 * Math.random()).toString(16).padStart(2, "0")}`;
-    ctx.strokeStyle = `${this.data.primaryColor}${Math.floor(160 + 30 * Math.random()).toString(16).padStart(2, "0")}`;
+    ctx.fillStyle = `${this.data.palette.tint}${Math.floor(18 + 2 * Math.random()).toString(16).padStart(2, "0")}`;
+    ctx.strokeStyle = `${this.data.palette.primary}${Math.floor(160 + 30 * Math.random()).toString(16).padStart(2, "0")}`;
     ctx.lineWidth = 2;
     ctx.setLineDash([this.outerDashLength, this.outerDashLength]); // Create dashed line pattern
 
@@ -53,8 +53,8 @@ export class ClientPortal implements ClientEntity {
 
     // Draw inner dashed circle
     ctx.rotate(this.clock / 4 + Math.random() * 0.01);
-    ctx.fillStyle = `${this.data.tintColor}${Math.floor(24 + 2 * Math.random()).toString(16).padStart(2, "0")}`;
-    ctx.strokeStyle = `${this.data.secondaryColor}${Math.floor(160 + 30 * Math.random()).toString(16).padStart(2, "0")}`;
+    ctx.fillStyle = `${this.data.palette.tint}${Math.floor(24 + 2 * Math.random()).toString(16).padStart(2, "0")}`;
+    ctx.strokeStyle = `${this.data.palette.secondary}${Math.floor(160 + 30 * Math.random()).toString(16).padStart(2, "0")}`;
     ctx.lineWidth = 1;
     ctx.setLineDash([this.innerDashLength, this.innerDashLength]); // Create dashed line pattern
 

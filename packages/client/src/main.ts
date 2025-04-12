@@ -1,10 +1,9 @@
 import { io } from "socket.io-client";
 import "./style.css";
 import { Scene } from "./scene";
-import { ClientEntity } from "./entity";
+import { ClientEntity, createOrUpdateClientEntity } from "./entity/client-entity";
 import { setupCanvas } from "./canvas";
 import { DataEntity } from "@spaceshipper/common";
-import { createOrUpdateClientEntity } from "./entity/entity";
 
 const LOGICAL_WIDTH = 960;
 const LOGICAL_HEIGHT = 540;

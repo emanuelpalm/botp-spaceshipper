@@ -1,4 +1,4 @@
-import { ClientEntity } from "./entity";
+import { ClientEntity } from "./client-entity";
 import { DataSpaceship } from "@spaceshipper/common";
 
 export class ClientSpaceship implements ClientEntity {
@@ -33,7 +33,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(6, -16);
     ctx.lineTo(12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.data.tintColor, 1, this.data.secondaryColor);
+    this.stroke(ctx, 3, this.data.palette.tint, 1, this.data.palette.secondary);
 
     // Draw body lower right wing
     ctx.beginPath();
@@ -43,7 +43,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-6, -16);
     ctx.lineTo(-12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.data.tintColor, 1, this.data.secondaryColor);
+    this.stroke(ctx, 3, this.data.palette.tint, 1, this.data.palette.secondary);
 
     // Draw body center
     ctx.beginPath();
@@ -55,7 +55,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-3, -12);
     ctx.lineTo(-2, -15);
     ctx.closePath();
-    this.stroke(ctx, 3.5, this.data.tintColor, 1.5, this.data.secondaryColor);
+    this.stroke(ctx, 3.5, this.data.palette.tint, 1.5, this.data.palette.secondary);
 
     // Draw body upper left wing
     ctx.beginPath();
@@ -66,7 +66,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(9, 1);
     ctx.lineTo(6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.data.tintColor, 2, this.data.primaryColor);
+    this.stroke(ctx, 4, this.data.palette.tint, 2, this.data.palette.primary);
 
     // Draw body upper right wing
     ctx.beginPath();
@@ -77,7 +77,7 @@ export class ClientSpaceship implements ClientEntity {
     ctx.lineTo(-9, 1);
     ctx.lineTo(-6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.data.tintColor, 2, this.data.primaryColor);
+    this.stroke(ctx, 4, this.data.palette.tint, 2, this.data.palette.primary);
 
     // Draw thruster
     if (intensity > 0.05) {

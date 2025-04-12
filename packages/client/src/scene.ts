@@ -1,5 +1,5 @@
 import { DataEntity } from '@spaceshipper/common';
-import { ClientEntity } from './entity/entity';
+import { ClientEntity } from './entity/client-entity';
 
 export class Scene {
   private width: number;
