@@ -33,7 +33,7 @@ const ctx = setupCanvas("canvas", {
 });
 
 const entities: Entity[] = [
-  new Portal(800, 100, 80, "#06f667", "#06f6b6", "#72f7a8"),
+  new Portal(800, 100, 80, "#06f667", "#06f6b6", "#72f7a8", "TARGET"),
   new Spaceship(100, 100, "#e20de5", "#29c1e3", "#7b6aeb", "Alpha"),
   new Spaceship(200, 200, "#f2d609", "#7ece6f", "#0fc0d2", "Beta"),
   new Spaceship(300, 300, "#bde2f5", "#f599e4", "#d6bbee", "Gamma"),

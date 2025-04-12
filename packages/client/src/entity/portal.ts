@@ -3,24 +3,26 @@ import { Entity } from "./entity";
 export class Portal implements Entity {
     public x: number;
     public y: number;
-    public dx: number = (Math.random() - 0.5) * 500;
-    public dy: number = (Math.random() - 0.5) * 500;
+    public dx: number = 0;
+    public dy: number = 0;
     public radius: number;
     public primaryColor: string;
     public secondaryColor: string;
     public tintColor: string;
+    public name: string;
 
     private clock: number = 0;
     private outerDashLength: number;
     private innerDashLength: number;
 
-    constructor(x: number, y: number, radius: number, primaryColor: string, secondaryColor: string, tintColor: string) {
+    constructor(x: number, y: number, radius: number, primaryColor: string, secondaryColor: string, tintColor: string, name: string) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tintColor = tintColor;
+        this.name = name;
 
         this.outerDashLength = (Math.PI * this.radius * 2) / 80;
         this.innerDashLength = (Math.PI * this.radius * 2) / 120;
@@ -28,6 +30,13 @@ export class Portal implements Entity {
 
     draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
+
+        // Draw name.
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = `12px Arial`;
+        ctx.fillStyle = this.primaryColor;
+        ctx.fillText(this.name, 0, -26);
 
         // Draw cross in the middle
         ctx.strokeStyle = this.secondaryColor;

@@ -20,8 +20,8 @@ export class Spaceship implements Entity {
     ) {
         this.x = x;
         this.y = y;
-        this.dx = (Math.random() - 0.5) * 500;
-        this.dy = (Math.random() - 0.5) * 500;
+        this.dx = 0;
+        this.dy = 0;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tintColor = tintColor;
