@@ -2,7 +2,7 @@ import "./style.css"
 import io from "socket.io-client";
 import { Scene } from "./scene";
 import { Entity, Spaceship } from "./entity";
-import Renderer from "./renderer";
+import { setupCanvas } from "./canvas";
 
 const socket = io("http://localhost:3000");
 
@@ -23,6 +23,14 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `
 
+const LOGICAL_WIDTH = 960;
+const LOGICAL_HEIGHT = 540;
+
+const ctx = setupCanvas("canvas", {
+  logicalWidth: LOGICAL_WIDTH,
+  logicalHeight: LOGICAL_HEIGHT,
+});
+
 const entities: Entity[] = [
   new Spaceship(100, 100, "#e20de5", "#29c1e3", "#7b6aeb", "Alpha"),
   new Spaceship(200, 200, "#f2d609", "#7ece6f", "#0fc0d2", "Beta"),
@@ -33,23 +41,22 @@ const entities: Entity[] = [
   new Spaceship(500, 700, "#31ec9f", "#06a5f6", "#19ccc8", "Kappa"),
 ];
 
-const renderer = new Renderer("canvas");
-const scene = new Scene(entities);
+const scene = new Scene(entities, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 
 let ts0 = performance.now();
 function gameLoop(ts1: number): void {
   const dt = (ts1 - ts0) / 1000;
   ts0 = ts1;
   
-  update(dt, renderer.s);
-  scene.draw(renderer, dt);
+  update(dt);
+  scene.draw(ctx, dt);
   
   requestAnimationFrame(gameLoop);
 }
 
-function update(dt: number, s: number): void {
+function update(dt: number): void {
   for (const entity of entities) {
-    entity.update(dt, s);
+    entity.update(dt);
   }
 }
 

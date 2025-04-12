@@ -6,6 +6,6 @@ export interface Entity {
     primaryColor: string;
     secondaryColor: string;
     tintColor: string;
-    draw(ctx: CanvasRenderingContext2D, sx: number, sy: number, s: number): void;
-    update(dt: number, s: number): void;
+    draw(ctx: CanvasRenderingContext2D): void;
+    update(dt: number): void;
 }
