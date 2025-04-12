@@ -19,7 +19,7 @@ socket.on("disconnect", () => {
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <div id="connection-status">Connecting to server...</div>
-    <canvas id="game"></canvas>
+    <canvas id="canvas"></canvas>
   </div>
 `
 
@@ -33,7 +33,7 @@ const entities: Entity[] = [
   new Spaceship(500, 700, "#31ec9f", "#06a5f6", "#19ccc8", "Kappa"),
 ];
 
-const renderer = new Renderer("game");
+const renderer = new Renderer("canvas");
 const scene = new Scene(entities);
 
 let ts0 = performance.now();
@@ -41,15 +41,15 @@ function gameLoop(ts1: number): void {
   const dt = (ts1 - ts0) / 1000;
   ts0 = ts1;
   
-  update(dt);
+  update(dt, renderer.s);
   scene.draw(renderer, dt);
   
   requestAnimationFrame(gameLoop);
 }
 
-function update(dt: number): void {
+function update(dt: number, s: number): void {
   for (const entity of entities) {
-    entity.update(dt);
+    entity.update(dt, s);
   }
 }
 

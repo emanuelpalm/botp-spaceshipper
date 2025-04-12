@@ -28,7 +28,7 @@ export class Spaceship implements Entity {
         this.name = name;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, sx: number, sy: number, s: number): void {
         ctx.save();
 
         // Calculate rotation angle based on velocity
@@ -43,75 +43,75 @@ export class Spaceship implements Entity {
         // Draw name.
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.font = "12px Arial";
+        ctx.font = `${12 * s}px Arial`;
         ctx.fillStyle = "#fff";
-        ctx.fillText(this.name, 0, -36);
+        ctx.fillText(this.name, 0, -36 * sy);
 
         // Rotate
         ctx.rotate(angle);
 
         // Draw body lower left wing
         ctx.beginPath();
-        ctx.moveTo(3, -1);
-        ctx.lineTo(3, -12);
-        ctx.lineTo(5, -13);
-        ctx.lineTo(6, -16);
-        ctx.lineTo(12, -13);
+        ctx.moveTo(3 * sx, -1 * sy);
+        ctx.lineTo(3 * sx, -12 * sy);
+        ctx.lineTo(5 * sx, -13 * sy);
+        ctx.lineTo(6 * sx, -16 * sy);
+        ctx.lineTo(12 * sx, -13 * sy);
         ctx.closePath();
-        this.stroke(ctx, 3, this.tintColor, 1, this.secondaryColor);
+        this.stroke(ctx, 3, this.tintColor, 1, this.secondaryColor, s);
 
         // Draw body lower right wing
         ctx.beginPath();
-        ctx.moveTo(-3, -1);
-        ctx.lineTo(-3, -12);
-        ctx.lineTo(-5, -13);
-        ctx.lineTo(-6, -16);
-        ctx.lineTo(-12, -13);
+        ctx.moveTo(-3 * sx, -1 * sy);
+        ctx.lineTo(-3 * sx, -12 * sy);
+        ctx.lineTo(-5 * sx, -13 * sy);
+        ctx.lineTo(-6 * sx, -16 * sy);
+        ctx.lineTo(-12 * sx, -13 * sy);
         ctx.closePath();
-        this.stroke(ctx, 3, this.tintColor, 1, this.secondaryColor);
+        this.stroke(ctx, 3, this.tintColor, 1, this.secondaryColor, s);
 
         // Draw body center
         ctx.beginPath();
-        ctx.moveTo(2, -15);
-        ctx.lineTo(3, -12);
-        ctx.lineTo(3, 10);
-        ctx.lineTo(0, 11);
-        ctx.lineTo(-3, 10);
-        ctx.lineTo(-3, -12);
-        ctx.lineTo(-2, -15);
+        ctx.moveTo(2 * sx, -15 * sy);
+        ctx.lineTo(3 * sx, -12 * sy);
+        ctx.lineTo(3 * sx, 10 * sy);
+        ctx.lineTo(0 * sx, 11 * sy);
+        ctx.lineTo(-3 * sx, 10 * sy);
+        ctx.lineTo(-3 * sx, -12 * sy);
+        ctx.lineTo(-2 * sx, -15 * sy);
         ctx.closePath();
-        this.stroke(ctx, 3.5, this.tintColor, 1.5, this.secondaryColor);
+        this.stroke(ctx, 3.5, this.tintColor, 1.5, this.secondaryColor, s);
 
         // Draw body upper left wing
         ctx.beginPath();
-        ctx.moveTo(3, 15);
-        ctx.lineTo(3, -1);
-        ctx.lineTo(13, -14);
-        ctx.lineTo(14, -5);
-        ctx.lineTo(9, 1);
-        ctx.lineTo(6, 13);
+        ctx.moveTo(3 * sx, 15 * sy);
+        ctx.lineTo(3 * sx, -1 * sy);
+        ctx.lineTo(13 * sx, -14 * sy);
+        ctx.lineTo(14 * sx, -5 * sy);
+        ctx.lineTo(9 * sx, 1 * sy);
+        ctx.lineTo(6 * sx, 13 * sy);
         ctx.closePath();
-        this.stroke(ctx, 4, this.tintColor, 2, this.primaryColor);
+        this.stroke(ctx, 4, this.tintColor, 2, this.primaryColor, s);
 
         // Draw body upper right wing
         ctx.beginPath();
-        ctx.moveTo(-3, 15);
-        ctx.lineTo(-3, -1);
-        ctx.lineTo(-13, -14);
-        ctx.lineTo(-14, -5);
-        ctx.lineTo(-9, 1);
-        ctx.lineTo(-6, 13);
+        ctx.moveTo(-3 * sx, 15 * sy);
+        ctx.lineTo(-3 * sx, -1 * sy);
+        ctx.lineTo(-13 * sx, -14 * sy);
+        ctx.lineTo(-14 * sx, -5 * sy);
+        ctx.lineTo(-9 * sx, 1 * sy);
+        ctx.lineTo(-6 * sx, 13 * sy);
         ctx.closePath();
-        this.stroke(ctx, 4, this.tintColor, 2, this.primaryColor);
+        this.stroke(ctx, 4, this.tintColor, 2, this.primaryColor, s);
 
         // Draw thruster
         if (intensity > 0.05) {
             ctx.beginPath();
-            ctx.moveTo(1, -18);
-            ctx.lineTo(2, -19);
-            ctx.lineTo(0, -19 - this.getThrusterLength(intensity));
-            ctx.lineTo(-2, -19);
-            ctx.lineTo(-1, -18);
+            ctx.moveTo(1 * sx, -18 * sy);
+            ctx.lineTo(2 * sx, -19 * sy);
+            ctx.lineTo(0 * sx, -19 * sy - this.getThrusterLength(intensity));
+            ctx.lineTo(-2 * sx, -19 * sy);
+            ctx.lineTo(-1 * sx, -18 * sy);
             ctx.closePath();
 
             ctx.lineWidth = 1 + intensity;
@@ -122,17 +122,17 @@ export class Spaceship implements Entity {
         ctx.restore();
     }
 
-    private stroke(ctx: CanvasRenderingContext2D, w0: number, c0: string, w1: number, c1: string) {
+    private stroke(ctx: CanvasRenderingContext2D, w0: number, c0: string, w1: number, c1: string, s: number) {
         ctx.strokeStyle = c0 + Math.floor(0x60 + 0x10 * Math.random()).toString(16);
-        ctx.lineWidth = w0 + Math.random() / 2;
+        ctx.lineWidth = (w0 + Math.random() / 2) * s;
         ctx.stroke();
 
         ctx.strokeStyle = c1 + Math.floor(0xB0 + 0x20 * Math.random()).toString(16);
-        ctx.lineWidth = w1;
+        ctx.lineWidth = w1 * s;
         ctx.stroke();
 
         ctx.strokeStyle = "#ffffff" + Math.floor(0x20 + 0x10 * Math.random()).toString(16);
-        ctx.lineWidth = 0.5 + Math.random();
+        ctx.lineWidth = (0.5 + Math.random()) * s;
         ctx.stroke();
     }
 
@@ -149,8 +149,8 @@ export class Spaceship implements Entity {
         return `rgb(${r},${g},${b})`;
     }
 
-    update(dt: number): void {
-        this.x += this.dx * dt;
-        this.y += this.dy * dt;
+    update(dt: number, s: number): void {
+        this.x += this.dx * dt * s;
+        this.y += this.dy * dt * s;
     }
 }

@@ -31,7 +31,7 @@ export class Scene {
         this.drawFps(renderer, 1 / dt);
 
         for (const entity of this.entities) {
-            entity.draw(renderer.context);
+            entity.draw(renderer.context, renderer.sx, renderer.sy, renderer.s);
         }
     }
 
