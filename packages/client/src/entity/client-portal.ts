@@ -21,7 +21,7 @@ export class ClientPortal implements ClientEntity {
     // Draw name.
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `12px Arial`;
+    ctx.font = `12px Oxanium`;
     ctx.fillStyle = this.data.palette.primary;
     ctx.fillText(this.data.name, 0, -26);
 

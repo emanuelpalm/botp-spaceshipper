@@ -18,7 +18,7 @@ export class ClientSpaceship implements ClientEntity {
     // Draw name.
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `12px Arial`;
+    ctx.font = `12px Oxanium`;
     ctx.fillStyle = "#fff";
     ctx.fillText(this.data.name, 0, -36);
 
