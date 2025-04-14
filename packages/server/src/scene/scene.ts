@@ -1,7 +1,6 @@
 import { DataBackground, DataStateScene } from "@spaceshipper/common";
 import { ProtocolError } from "../protocol-error.ts";
 import { ServerEntity } from "../entity/server-entity.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
 
 export class Scene {
   public id: string;
@@ -22,7 +21,7 @@ export class Scene {
     };
   }
 
-  join(_player: ServerPlayer): void {
+  join(_playerId: string, name: string): void {
     throw new ProtocolError("It is not permitted to join at this time.");
   }
 

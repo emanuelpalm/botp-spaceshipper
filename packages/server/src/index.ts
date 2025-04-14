@@ -1,14 +1,22 @@
+import readline from "node:readline/promises";
 import { PlayerServer } from "./player-server.ts";
 import { WebServer } from "./web-server.ts";
 import { World } from "./world.ts";
 
 import { lobby } from "./scene/index.ts";
-import { ServerPlayer } from "./entity/server-player.ts";
 
 const LOOP_UPDATE_RATE = 20; // Updates per second
 const LOOP_UPDATE_INTERVAL = 1000 / LOOP_UPDATE_RATE;
 const WEB_PORT = process.env.WEB_PORT ? parseInt(process.env.WEB_PORT) : 3000;
 const PLAYER_PORT = process.env.PLAYER_PORT ? parseInt(process.env.PLAYER_PORT) : 3001;
+
+// Initialize readline interface.
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false,
+});
+rl.setPrompt("> ");
 
 // Initialize the game world.
 const world = new World(lobby);
@@ -17,11 +25,11 @@ const world = new World(lobby);
 const webServer = new WebServer(WEB_PORT);
 webServer.addListener({
   onConnect: (id) => {
-    console.log(`Web client connected: ${id}.`);
+    console.log(`Web client ${id} connected.`);
   },
   onDisconnect: (id) => {
-    console.log(`Web client disconnected: ${id}.`);
-  }
+    console.log(`Web client ${id} disconnected.`);
+  },
 });
 
 // Handle player clients.
@@ -50,8 +58,53 @@ setInterval(() => {
   webServer.publishState(world.getState());
 }, LOOP_UPDATE_INTERVAL);
 
-// Start servers.
+// Start servers and readline interface.
 (async () => {
+  console.log();
+  console.log("██████╗             ██╗   ██████╗");
+  console.log("██╔══██╗ ██████╗  ██████╗ ██╔══██╗");
+  console.log("██████╔╝██║   ██║   ██╔═╝ ██████╔╝");
+  console.log("██╔══██╗██║   ██║   ██║   ██╔═══╝ ");
+  console.log("██████╔╝╚██████╔╝ ████║   ██║");
+  console.log("╚═════╝  ╚═════╝  ╚═══╝   ╚═╝");
+  console.log("   THE SPACESHIPPER CHALLENGE");
+  console.log();
+
   await webServer.start();
   await playerServer.start();
+
+  console.log();
+  console.log("Type 'help' for a list of available actions.");
+
+  rl.on("line", async (line) => {
+    const args = line.split(/\s+/);
+    switch (args[0]) {
+      default:
+        console.log(`Unknown action: '${args[0]}'.`);
+        console.log("Type 'help' for a list of available actions.");
+        break;
+
+      case "help":
+        console.log("Available actions:");
+        console.log("  help - Show this help message.");
+        console.log("  game:start - Start pending level.");
+        console.log("  quit - Quit the server.");
+        break;
+
+      case "game:start":
+        console.log("Starting the game...");
+        break;
+
+      case "quit":
+        console.log("Bye!");
+
+        await webServer.stop();
+        await playerServer.stop();
+
+        rl.close();
+        process.exit(0);
+    }
+    rl.prompt();
+  });
+  rl.prompt();
 })();

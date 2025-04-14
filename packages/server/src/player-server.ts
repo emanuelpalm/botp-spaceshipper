@@ -1,10 +1,11 @@
 import { DataStateGame, DataStateScene } from "@spaceshipper/common";
 import express, { Express } from "express";
-import { createServer } from "http";
+import { createServer, Server as HttpServer } from "http";
 import { ProtocolError } from "./protocol-error.ts";
 
 export class PlayerServer {
   private app: Express;
+  private server: HttpServer | undefined;
   private listeners: Set<PlayerServerListener>;
   private players: Set<string> = new Set();
   private port: number;
@@ -139,11 +140,21 @@ export class PlayerServer {
 
   start(): Promise<void> {
     return new Promise((resolve) => {
-      const server = createServer(this.app);
-      server.listen(this.port, () => {
+      this.server = createServer(this.app);
+      this.server.listen(this.port, () => {
         console.log(`Player REST API running on port ${this.port}.`);
         resolve();
       });
+    });
+  }
+
+  stop(): Promise<void> {
+    return new Promise(resolve => {
+      if (this.server) {
+        this.server.close(() => resolve());
+      } else {
+        resolve();
+      }
     });
   }
 

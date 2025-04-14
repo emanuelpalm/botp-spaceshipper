@@ -7,7 +7,6 @@ export interface ClientEntity {
   data: DataEntity
 
   draw(ctx: CanvasRenderingContext2D): void;
-
   update(dt: number): void;
 }
 

@@ -70,8 +70,8 @@ class Lobby extends Scene {
     super.update(dt);
   }
 
-  override join(player: ServerPlayer): void {
-    this.entities.set(player.data.id, player);
+  override join(playerId: string, name: string): void {
+    this.entities.set(playerId, ServerPlayer.create(playerId, name));
 
     // Collect existing players
     const players = [];
