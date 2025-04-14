@@ -10,24 +10,26 @@ export interface DataEntity {
   dx: number;
   dy: number;
 
+  opacity: number;
   paletteId: PaletteId;
 }
 
 export enum DataEntityType {
-  Portal = 0,
-  Spaceship = 1,
+  Player = 0,
+  Portal = 1,
   Text = 2,
+}
+
+export interface DataPlayer extends DataEntity {
+  type: DataEntityType.Player;
+  name: string;
+  score: number;
 }
 
 export interface DataPortal extends DataEntity {
   type: DataEntityType.Portal;
   name: string;
   radius: number;
-}
-
-export interface DataSpaceship extends DataEntity {
-  type: DataEntityType.Spaceship;
-  name: string;
 }
 
 export interface DataText extends DataEntity {

@@ -1,6 +1,7 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 import { ServerText } from "../entity/server-text.ts";
 import { Scene } from "../scene.ts";
+import { ServerPlayer } from "../entity/server-player.ts";
 
 const background: DataBackgroundStars = {
   type: DataBackgroundType.Stars,
@@ -23,6 +24,7 @@ const textTitle = new ServerText({
   dx: 0,
   dy: 0,
 
+  opacity: 1,
   paletteId: PaletteId.Delta,
 
   font: "Smoosh Sans",
@@ -40,6 +42,7 @@ const textSubtitle = new ServerText({
   dx: 0,
   dy: 0,
 
+  opacity: 1,
   paletteId: PaletteId.Gamma,
 
   font: "Oxanium",
@@ -57,18 +60,30 @@ const textWaiting = new ServerText({
   dx: 0,
   dy: 0,
 
+  opacity: 0,
   paletteId: PaletteId.Gamma,
 
   font: "Smoosh Sans",
   fontSize: 24,
-  fontWeight: 600,
+  fontWeight: 500,
   text: "Waiting for players to join ...",
 });
 
-class Intro extends Scene { }
+class Lobby extends Scene {
+  private clock: number = 0;
+  private players: ServerPlayer[] = [];
 
-export const intro = new Intro(
-  "intro",
+  override update(dt: number) {
+    this.clock += dt;
+
+    textWaiting.data.opacity = (this.clock & 1) === 1 ? 1 : 0;
+
+    super.update(dt);
+  }
+}
+
+export const lobby = new Lobby(
+  "lobby",
   background,
   [
     textTitle,

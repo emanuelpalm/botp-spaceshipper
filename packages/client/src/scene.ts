@@ -15,10 +15,12 @@ export class Scene {
     this.background.draw(ctx);
 
     for (const entity of this.entities.values()) {
-      ctx.save();
-      ctx.translate(entity.data.x, entity.data.y);
-      entity.draw(ctx);
-      ctx.restore();
+      if (entity.data.opacity > 0) {
+        ctx.save();
+        ctx.translate(entity.data.x, entity.data.y);
+        entity.draw(ctx);
+        ctx.restore();
+      }
     }
 
     this.drawFps(ctx, 1 / dt);

@@ -1,4 +1,4 @@
-import { DataText, getPalette, Palette } from "@spaceshipper/common";
+import { DataText, getPalette } from "@spaceshipper/common";
 import { ClientEntity } from "./client-entity";
 
 export class ClientText implements ClientEntity {

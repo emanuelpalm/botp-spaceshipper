@@ -1,12 +1,12 @@
 import { ClientEntity } from "./client-entity";
-import { DataSpaceship, getPalette, Palette } from "@spaceshipper/common";
+import { DataPlayer, getPalette, Palette } from "@spaceshipper/common";
 
-export class ClientSpaceship implements ClientEntity {
-  public data: DataSpaceship;
+export class ClientPlayer implements ClientEntity {
+  public data: DataPlayer;
 
   private palette: Palette;
 
-  constructor(data: DataSpaceship) {
+  constructor(data: DataPlayer) {
     this.data = data;
     this.palette = getPalette(data.paletteId);
   }

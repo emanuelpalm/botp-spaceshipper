@@ -1,5 +1,5 @@
 import { ServerPortal } from "../entity/server-portal.ts";
-import { ServerSpaceship } from "../entity/server-spaceship.ts";
+import { ServerPlayer } from "../entity/server-player.ts";
 import { Scene } from "../scene.js";
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 
@@ -15,8 +15,8 @@ const background: DataBackgroundStars = {
   dy: 3,
 };
 
-// Create spaceships
-const ships = [
+// Create players
+const players = [
   { name: "Alpha", paletteId: PaletteId.Alpha },
   { name: "Beta", paletteId: PaletteId.Beta },
   { name: "Gamma", paletteId: PaletteId.Gamma },
@@ -40,19 +40,22 @@ export const level0 = new Scene(
       dy: 0,
       paletteId: PaletteId.Target,
       name: "TARGET",
+      opacity: 1,
       radius: 80,
     }),
 
-    // Spaceships
-    ...ships.map((ship, index) => new ServerSpaceship({
-      id: `ship-${index}`,
-      type: DataEntityType.Spaceship,
+    // Players
+    ...players.map((player, index) => new ServerPlayer({
+      id: `player-${index}`,
+      type: DataEntityType.Player,
       x: Math.random() * 960,
       y: Math.random() * 540,
       dx: (Math.random() - 0.5) * 200,
       dy: (Math.random() - 0.5) * 200,
-      paletteId: ship.paletteId,
-      name: ship.name,
+      paletteId: player.paletteId,
+      name: player.name,
+      score: 0,
+      opacity: 1,
     })),
   ]
 );

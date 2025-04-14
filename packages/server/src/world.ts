@@ -13,8 +13,6 @@ export class World {
   }
 
   update(dt: number) {
-    for (const entity of this.scene.entities) {
-      entity.update(dt);
-    }
+    this.scene.update(dt);
   }
 }

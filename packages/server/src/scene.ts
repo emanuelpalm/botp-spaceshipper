@@ -19,4 +19,10 @@ export class Scene {
       entities: this.entities.map(entity => entity.data),
     };
   }
+
+  update(dt: number) {
+    for (const entity of this.entities) {
+      entity.update(dt);
+    }
+  }
 }

@@ -1,10 +1,10 @@
-import { DataSpaceship } from "@spaceshipper/common";
+import { DataPlayer } from "@spaceshipper/common";
 import { ServerEntity } from "./server-entity.ts";
 
-export class ServerSpaceship implements ServerEntity {
-  data: DataSpaceship;
+export class ServerPlayer implements ServerEntity {
+  data: DataPlayer;
 
-  constructor(data: DataSpaceship) {
+  constructor(data: DataPlayer) {
     this.data = data;
   }
 
