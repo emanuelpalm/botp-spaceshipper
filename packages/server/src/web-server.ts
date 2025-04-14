@@ -1,4 +1,4 @@
-import { DataState } from "@spaceshipper/common";
+import { DataStateScene } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
 import { Server as IoServer, Socket } from "socket.io";
@@ -54,7 +54,7 @@ export class WebServer {
     });
   }
 
-  publishState(state: DataState) {
+  publishState(state: DataStateScene) {
     for (const socket of this.sockets) {
       socket.emit("state", state);
     }

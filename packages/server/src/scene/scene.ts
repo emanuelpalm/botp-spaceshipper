@@ -1,4 +1,4 @@
-import { DataBackground, DataState } from "@spaceshipper/common";
+import { DataBackground, DataStateScene } from "@spaceshipper/common";
 import { ProtocolError } from "../protocol-error.ts";
 import { ServerEntity } from "../entity/server-entity.ts";
 import { ServerPlayer } from "../entity/server-player.ts";
@@ -14,7 +14,7 @@ export class Scene {
     this.entities = new Map(entities.map(entity => [entity.data.id, entity]));
   }
 
-  getState(worldId: string): DataState {
+  getState(worldId: string): DataStateScene {
     return {
       sceneId: `/${worldId}/${this.id}`,
       background: this.background,

@@ -1,4 +1,4 @@
-import { DataState } from '@spaceshipper/common';
+import { DataStateScene } from '@spaceshipper/common';
 import { Scene } from './scene/scene.ts';
 import { ServerPlayer } from './entity/server-player.ts';
 
@@ -11,7 +11,7 @@ export class World {
     this.scene = scene;
   }
 
-  getState(): DataState {
+  getState(): DataStateScene {
     return this.scene.getState(this.worldId);
   }
 

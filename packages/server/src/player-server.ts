@@ -1,4 +1,4 @@
-import { DataState } from "@spaceshipper/common";
+import { DataStateGame, DataStateScene } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer } from "http";
 import { ProtocolError } from "./protocol-error.ts";
@@ -8,6 +8,8 @@ export class PlayerServer {
   private listeners: Set<PlayerServerListener>;
   private players: Set<string> = new Set();
   private port: number;
+  private state: DataStateGame | undefined;
+  private stateHandlers = new Map<string, (state: DataStateGame) => void>();
 
   constructor(port: number) {
     this.app = express();
@@ -78,7 +80,7 @@ export class PlayerServer {
         return;
       }
 
-      let state: DataState | undefined;
+      let state: DataStateScene | undefined;
       for (const listener of this.listeners) {
         state = listener.onPlay(id, dx, dy);
       }
@@ -97,6 +99,33 @@ export class PlayerServer {
       }
       this.players.delete(id);
       res.json({ message: "Bye!" });
+    });
+
+    // State streaming endpoint
+    this.app.get('/state', (req, res) => {
+      // Set headers for SSE
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      // Send initial state if available
+      if (this.state) {
+        res.write(`data: ${JSON.stringify(this.state)}\r\n\r\n`);
+      }
+
+      // Create a state change handler
+      const stateHandler = (newState: DataStateGame) => {
+        res.write(`data: ${JSON.stringify(newState)}\r\n\r\n`);
+      };
+
+      // Add this client's handler to a Set when they connect
+      const clientId = `${Date.now()}-${Math.random()}`;
+      this.stateHandlers.set(clientId, stateHandler);
+
+      // Remove handler when client disconnects
+      req.on('close', () => {
+        this.stateHandlers.delete(clientId);
+      });
     });
   }
 
@@ -117,10 +146,19 @@ export class PlayerServer {
       });
     });
   }
+
+  publishState(state: DataStateGame) {
+    this.state = state;
+
+    // Notify all connected clients
+    for (const handler of this.stateHandlers.values()) {
+      handler(state);
+    }
+  }
 }
 
 export interface PlayerServerListener {
   onJoin: (id: string, name: string) => void;
   onLeave: (id: string) => void;
-  onPlay: (id: string, dx: number, dy: number) => DataState;
+  onPlay: (id: string, dx: number, dy: number) => DataStateScene;
 }
