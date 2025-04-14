@@ -9,7 +9,7 @@ const background: DataBackgroundStars = {
   width: 960,
   height: 540,
 
-  starCount: 200,
+  starCount: 400,
 
   dx: 0,
   dy: -50,

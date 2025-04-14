@@ -14,21 +14,23 @@ export class ClientBackgroundStars implements ClientBackground {
   private generateStars(count: number): Star[] {
     const stars: Star[] = [];
     for (let i = 0; i < count; i++) {
+      const intensity = Math.pow(Math.random(), 2);
       stars.push({
         x: Math.random() * this.data.width,
         y: Math.random() * this.data.height,
-        size: Math.random() * 2 + 1,
-        color: generateColor(),
-        alpha: Math.random() * 0.9,
+        size: intensity * 1.5 + 0.5,
+        color: generateColor(intensity),
+        alpha: intensity * 0.9,
         velocity: 0.2 + Math.random() * 0.8,
       });
     }
     return stars;
 
-    function generateColor(): string {
-      const r = Math.floor(175 + Math.random() * 80).toString(16).padStart(2, "0");
-      const g = Math.floor(175 + Math.random() * 80).toString(16).padStart(2, "0");
-      const b = Math.floor(175 + Math.random() * 80).toString(16).padStart(2, "0");
+    function generateColor(intensity: number): string {
+      const base = intensity * 175;
+      const r = Math.floor(base + Math.random() * 80).toString(16).padStart(2, "0");
+      const g = Math.floor(base + Math.random() * 80).toString(16).padStart(2, "0");
+      const b = Math.floor(base + Math.random() * 80).toString(16).padStart(2, "0");
       return `#${r}${g}${b}`;
     }
   }
@@ -51,7 +53,7 @@ export class ClientBackgroundStars implements ClientBackground {
       } else {
         const s1 = star.size + Math.random() * 0.5;
         const s2 = s1 * 2;
-        ctx.fillRect(star.x - s1, star.y - s1, s2, s2);
+        ctx.fillRect(star.x + Math.random() - s1, star.y + Math.random() - s1, s2, s2);
       }
       ctx.fill();
     }
