@@ -71,19 +71,40 @@ class Lobby extends Scene {
   }
 
   override join(player: ServerPlayer): void {
-    player.data.x = 480;
-    player.data.y = 380;
-
     this.entities.set(player.data.id, player);
 
+    // Collect existing players
     const players = [];
-    for (const entity of this.entities) {
+    for (const entity of this.entities.values()) {
       if (entity instanceof ServerPlayer) {
         players.push(entity);
       }
     }
 
+    // Calculate grid position (8 players per row)
+    const PLAYERS_PER_ROW = 8;
 
+    outer:
+    for (let yIndex = 0, yEnd = Math.floor(players.length / PLAYERS_PER_ROW); yIndex <= yEnd; yIndex++) {
+      const xLength = yIndex === yEnd
+        ? (players.length - yIndex * PLAYERS_PER_ROW)
+        : PLAYERS_PER_ROW;
+
+      for (let xIndex = 0; xIndex < xLength; xIndex++) {
+        const i = yIndex * PLAYERS_PER_ROW + xIndex;
+        if (i >= players.length) {
+          break outer;
+        }
+
+        const player = players[i];
+
+        player.data.x = 480 - (90 * (xLength - 1)) / 2 + (xIndex * 90);
+        player.data.y = 394 + (yIndex * 80);
+
+        player.data.dx = 0;
+        player.data.dy = 0.0001;
+      }
+    }
   }
 }
 

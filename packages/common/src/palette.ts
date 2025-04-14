@@ -50,5 +50,5 @@ export function getPalette(id: PaletteId): Palette {
 }
 
 export function getPlayerPaletteId(index: number): PaletteId {
-  return index % PaletteId.Kappa + 1;
+  return index % (PaletteId.Kappa + 1);
 }
