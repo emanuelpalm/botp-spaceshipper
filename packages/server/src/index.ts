@@ -1,46 +1,57 @@
-import express, { Express } from "express";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import { PlayerServer } from "./player-server.ts";
+import { WebServer } from "./web-server.ts";
 import { World } from "./world.ts";
-import { lobby } from "./scenes/lobby.ts";
-import { level0 } from "./scenes/level0.ts";
 
-const app: Express = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5174",
-    methods: ["GET", "POST"]
+import { lobby } from "./scene/index.ts";
+import { ServerPlayer } from "./entity/server-player.ts";
+
+const LOOP_UPDATE_RATE = 20; // Updates per second
+const LOOP_UPDATE_INTERVAL = 1000 / LOOP_UPDATE_RATE;
+const WEB_PORT = process.env.WEB_PORT ? parseInt(process.env.WEB_PORT) : 3000;
+const PLAYER_PORT = process.env.PLAYER_PORT ? parseInt(process.env.PLAYER_PORT) : 3001;
+
+// Initialize the game world.
+const world = new World(lobby);
+
+// Handle web clients.
+const webServer = new WebServer(WEB_PORT);
+webServer.addListener({
+  onConnect: (id) => {
+    console.log(`Web client connected: ${id}.`);
+  },
+  onDisconnect: (id) => {
+    console.log(`Web client disconnected: ${id}.`);
   }
 });
 
-const world = new World(lobby);
-const UPDATE_RATE = 20; // Updates per second
-const UPDATE_INTERVAL = 1000 / UPDATE_RATE;
-let lastUpdate = performance.now();
+// Handle player clients.
+const playerServer = new PlayerServer(PLAYER_PORT);
+playerServer.addListener({
+  onJoin: (id, name) => world.join(id, name),
+  onLeave: id => world.leave(id),
+  onPlay: (id, dx, dy) => {
+    console.log(`Player ${id} moved: dx=${dx}, dy=${dy}.`);
+    return world.getState();
+  }
+});
 
-// Game loop
+// Setup and run game loop.
+let ts0 = performance.now();
 setInterval(() => {
-  const now = performance.now();
-  const dt = (now - lastUpdate) / 1000;
-  lastUpdate = now;
+  // Determine the exact duration between this and the last invocation of this function.
+  const ts1 = performance.now();
+  const dt = (ts1 - ts0) / 1000;
+  ts0 = ts1;
 
+  // Update the game world.
   world.update(dt);
-  io.emit("world-state", world.getState());
-}, UPDATE_INTERVAL);
 
-io.on("connection", (socket: Socket) => {
-  console.log("A user connected");
+  // Publish the state of the game to all web clients.
+  webServer.publishState(world.getState());
+}, LOOP_UPDATE_INTERVAL);
 
-  // Send initial state to new client
-  socket.emit("world-state", world.getState());
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-});
-
-const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Start servers.
+(async () => {
+  await webServer.start();
+  await playerServer.start();
+})();

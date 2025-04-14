@@ -12,6 +12,7 @@ export enum PaletteId {
   Epsilon = 4,
   Iota = 5,
   Kappa = 6,
+
   Target = 7,
 
   Green = 8,
@@ -46,4 +47,8 @@ export function getPalette(id: PaletteId): Palette {
     case PaletteId.Green:
       return { primary: "#06a5f6", secondary: "#bde2f5", tint: "#9c0d79" };
   }
+}
+
+export function getPlayerPaletteId(index: number): PaletteId {
+  return index % PaletteId.Kappa + 1;
 }

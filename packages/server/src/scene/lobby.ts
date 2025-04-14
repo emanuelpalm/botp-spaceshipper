@@ -1,28 +1,24 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 import { ServerText } from "../entity/server-text.ts";
-import { Scene } from "../scene.ts";
+import { Scene } from "./scene.ts";
 import { ServerPlayer } from "../entity/server-player.ts";
 
 const background: DataBackgroundStars = {
   type: DataBackgroundType.Stars,
 
-  width: 960,
-  height: 540,
+  width: 960, height: 540,
 
   starCount: 400,
 
-  dx: 0,
-  dy: -50,
+  dx: 0, dy: -50,
 };
 
 const textTitle = new ServerText({
   id: "textTitle",
   type: DataEntityType.Text,
 
-  x: 480,
-  y: 200,
-  dx: 0,
-  dy: 0,
+  x: 480, y: 200,
+  dx: 0, dy: 0,
 
   opacity: 1,
   paletteId: PaletteId.Delta,
@@ -37,10 +33,8 @@ const textSubtitle = new ServerText({
   id: "textSubtitle",
   type: DataEntityType.Text,
 
-  x: 480,
-  y: 260,
-  dx: 0,
-  dy: 0,
+  x: 480, y: 260,
+  dx: 0, dy: 0,
 
   opacity: 1,
   paletteId: PaletteId.Gamma,
@@ -55,23 +49,18 @@ const textWaiting = new ServerText({
   id: "textWaiting",
   type: DataEntityType.Text,
 
-  x: 480,
-  y: 312,
-  dx: 0,
-  dy: 0,
+  x: 480, y: 312,
+  dx: 0, dy: 0,
 
   opacity: 0,
   paletteId: PaletteId.Gamma,
 
-  font: "Smoosh Sans",
-  fontSize: 24,
-  fontWeight: 500,
+  font: "Smoosh Sans", fontSize: 24, fontWeight: 500,
   text: "Waiting for players to join ...",
 });
 
 class Lobby extends Scene {
   private clock: number = 0;
-  private players: ServerPlayer[] = [];
 
   override update(dt: number) {
     this.clock += dt;
@@ -79,6 +68,22 @@ class Lobby extends Scene {
     textWaiting.data.opacity = (this.clock & 1) === 1 ? 1 : 0;
 
     super.update(dt);
+  }
+
+  override join(player: ServerPlayer): void {
+    player.data.x = 480;
+    player.data.y = 380;
+
+    this.entities.set(player.data.id, player);
+
+    const players = [];
+    for (const entity of this.entities) {
+      if (entity instanceof ServerPlayer) {
+        players.push(entity);
+      }
+    }
+
+
   }
 }
 

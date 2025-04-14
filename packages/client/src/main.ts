@@ -17,7 +17,7 @@ let ctx: CanvasRenderingContext2D | undefined;
 {
   const socket = io("http://localhost:3000");
 
-  socket.on('world-state', (state: DataState) => {
+  socket.on('state', (state: DataState) => {
     if (state.sceneId !== sceneId) {
       sceneId = state.sceneId;
 

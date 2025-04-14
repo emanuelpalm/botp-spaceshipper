@@ -1,6 +1,6 @@
 import { ServerPortal } from "../entity/server-portal.ts";
 import { ServerPlayer } from "../entity/server-player.ts";
-import { Scene } from "../scene.js";
+import { Scene } from "./scene.ts";
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 
 const background: DataBackgroundStars = {
