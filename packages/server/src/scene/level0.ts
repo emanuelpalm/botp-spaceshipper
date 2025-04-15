@@ -1,61 +1,50 @@
-import { ServerPortal } from "../entity/server-portal.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
+import { DataBackgroundStars, DataBackgroundType, DataEntity, DataEntityType, DataPlayer, DataPortal, DataText, PaletteId } from "@spaceshipper/common";
 import { Scene } from "./scene.ts";
-import { DataBackgroundStars, DataBackgroundType, DataEntityType, PaletteId } from "@spaceshipper/common";
 
-const background: DataBackgroundStars = {
-  type: DataBackgroundType.Stars,
+export class Level0 extends Scene {
+  override readonly background: DataBackgroundStars = {
+    type: DataBackgroundType.Stars,
+    width: 960, height: 540,
+    starCount: 200,
+    dx: 0 * (Math.random() - 0.5), dy: 10 * (Math.random() - 0.5),
+  };
 
-  width: 960,
-  height: 540,
+  override readonly nonPlayerEntities: DataEntity[];
 
-  starCount: 100,
+  private textCountdown: DataText = {
+    id: "textCountdown",
+    type: DataEntityType.Text,
+    x: 480, y: 30,
+    dx: 0, dy: 0,
+    opacity: 1,
+    paletteId: PaletteId.Delta,
+    font: "Oxanium", fontSize: 32, fontWeight: 300,
+    text: "t - 60.00",
+  };
 
-  dx: -2,
-  dy: 3,
-};
+  private portalTarget: DataPortal = {
+    id: "portal",
+    type: DataEntityType.Portal,
+    x: 100, y: 100,
+    dx: 0, dy: 0,
+    paletteId: PaletteId.Target,
+    opacity: 1,
+    name: "TARGET",
+    radius: 80,
+  };
 
-// Create players
-const players = [
-  { name: "Alpha", paletteId: PaletteId.Alpha },
-  { name: "Beta", paletteId: PaletteId.Beta },
-  { name: "Gamma", paletteId: PaletteId.Gamma },
-  { name: "Delta", paletteId: PaletteId.Delta },
-  { name: "Epsilon", paletteId: PaletteId.Epsilon },
-  { name: "Iota", paletteId: PaletteId.Iota },
-  { name: "Kappa", paletteId: PaletteId.Kappa },
-];
+  private time: number = 0;
 
-export const level0 = new Scene(
-  "level0",
-  background,
-  [
-    // Target portal
-    new ServerPortal({
-      id: "portal",
-      type: DataEntityType.Portal,
-      x: 100,
-      y: 100,
-      dx: 0,
-      dy: 0,
-      paletteId: PaletteId.Target,
-      name: "TARGET",
-      opacity: 1,
-      radius: 80,
-    }),
+  constructor() {
+    super("level0");
 
-    // Players
-    ...players.map((player, index) => new ServerPlayer({
-      id: `player-${index}`,
-      type: DataEntityType.Player,
-      x: Math.random() * 960,
-      y: Math.random() * 540,
-      dx: (Math.random() - 0.5) * 200,
-      dy: (Math.random() - 0.5) * 200,
-      paletteId: player.paletteId,
-      name: player.name,
-      score: 0,
-      opacity: 1,
-    })),
-  ]
-);
+    this.nonPlayerEntities = [
+      this.textCountdown,
+      this.portalTarget,
+    ];
+  }
+
+  override update(dt: number) {
+    this.time += dt;
+  }
+}

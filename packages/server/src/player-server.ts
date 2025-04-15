@@ -1,22 +1,24 @@
-import { DataStateGame, DataStateScene } from "@spaceshipper/common";
+import { DataState } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
-import { ProtocolError } from "./protocol-error.ts";
+import { ProtocolError } from "./error.ts";
 
 export class PlayerServer {
+  public port: number;
+
   private app: Express;
   private server: HttpServer | undefined;
   private listeners: Set<PlayerServerListener>;
   private players: Set<string> = new Set();
-  private port: number;
-  private state: DataStateGame | undefined;
-  private stateHandlers = new Map<string, (state: DataStateGame) => void>();
+  private state: DataState | undefined;
+  private stateHandlers = new Map<string, (state: DataState) => void>();
 
   constructor(port: number) {
+    this.port = port;
+
     this.app = express();
     this.app.use(express.json());
     this.listeners = new Set();
-    this.port = port;
 
     this.setupRoutes();
   }
@@ -81,7 +83,7 @@ export class PlayerServer {
         return;
       }
 
-      let state: DataStateScene | undefined;
+      let state: DataState | undefined;
       for (const listener of this.listeners) {
         state = listener.onPlay(id, dx, dy);
       }
@@ -115,7 +117,7 @@ export class PlayerServer {
       }
 
       // Create a state change handler
-      const stateHandler = (newState: DataStateGame) => {
+      const stateHandler = (newState: DataState) => {
         res.write(`data: ${JSON.stringify(newState)}\r\n\r\n`);
       };
 
@@ -141,10 +143,7 @@ export class PlayerServer {
   start(): Promise<void> {
     return new Promise((resolve) => {
       this.server = createServer(this.app);
-      this.server.listen(this.port, () => {
-        console.log(`Player REST API running on port ${this.port}.`);
-        resolve();
-      });
+      this.server.listen(this.port, () => resolve());
     });
   }
 
@@ -158,7 +157,7 @@ export class PlayerServer {
     });
   }
 
-  publishState(state: DataStateGame) {
+  publishState(state: DataState) {
     this.state = state;
 
     // Notify all connected clients
@@ -171,5 +170,5 @@ export class PlayerServer {
 export interface PlayerServerListener {
   onJoin: (id: string, name: string) => void;
   onLeave: (id: string) => void;
-  onPlay: (id: string, dx: number, dy: number) => DataStateScene;
+  onPlay: (id: string, dx: number, dy: number) => DataState;
 }

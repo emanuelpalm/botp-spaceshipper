@@ -2,8 +2,7 @@ import readline from "node:readline/promises";
 import { PlayerServer } from "./player-server.ts";
 import { WebServer } from "./web-server.ts";
 import { World } from "./world.ts";
-
-import { lobby } from "./scene/index.ts";
+import { ProtocolError } from "./error.ts";
 
 const LOOP_UPDATE_RATE = 20; // Updates per second
 const LOOP_UPDATE_INTERVAL = 1000 / LOOP_UPDATE_RATE;
@@ -19,17 +18,13 @@ const rl = readline.createInterface({
 rl.setPrompt("> ");
 
 // Initialize the game world.
-const world = new World(lobby);
+const world = new World();
 
 // Handle web clients.
 const webServer = new WebServer(WEB_PORT);
 webServer.addListener({
-  onConnect: (id) => {
-    console.log(`Web client ${id} connected.`);
-  },
-  onDisconnect: (id) => {
-    console.log(`Web client ${id} disconnected.`);
-  },
+  onConnect: id => {},
+  onDisconnect: id => {},
 });
 
 // Handle player clients.
@@ -39,7 +34,7 @@ playerServer.addListener({
   onLeave: id => world.leave(id),
   onPlay: (id, dx, dy) => {
     console.log(`Player ${id} moved: dx=${dx}, dy=${dy}.`);
-    return world.getState();
+    return world.state;
   }
 });
 
@@ -54,57 +49,98 @@ setInterval(() => {
   // Update the game world.
   world.update(dt);
 
-  // Publish the state of the game to all web clients.
-  webServer.publishState(world.getState());
+  // Publish the state of the game world to all web clients.
+  webServer.publishState(world.state);
 }, LOOP_UPDATE_INTERVAL);
 
 // Start servers and readline interface.
 (async () => {
   console.log();
-  console.log("██████╗             ██╗   ██████╗");
-  console.log("██╔══██╗ ██████╗  ██████╗ ██╔══██╗");
-  console.log("██████╔╝██║   ██║   ██╔═╝ ██████╔╝");
-  console.log("██╔══██╗██║   ██║   ██║   ██╔═══╝ ");
-  console.log("██████╔╝╚██████╔╝ ████║   ██║");
-  console.log("╚═════╝  ╚═════╝  ╚═══╝   ╚═╝");
-  console.log("   THE SPACESHIPPER CHALLENGE");
+  console.log("██████╗             ██████╗");
+  console.log("██╔══██╗       ██╗  ██╔══██╗");
+  console.log("██████╔╝ ████╗█████╗██████╔╝");
+  console.log("██╔══██╗██╔═██╬██╔═╝██╔═══╝");
+  console.log("██████╔╝╚████╔╝██║  ██║");
+  console.log("╚═════╝  ╚═══╝ ╚██╗ ╚═╝");
+  console.log("                ╚═╝")
+  console.log(" THE SPACESHIPPER CHALLENGE");
   console.log();
 
   await webServer.start();
+  console.log("Web server running on port %d.", webServer.port);
   await playerServer.start();
+  console.log("Player server running on port %d.", playerServer.port);
 
   console.log();
   console.log("Type 'help' for a list of available actions.");
 
-  rl.on("line", async (line) => {
-    const args = line.split(/\s+/);
-    switch (args[0]) {
-      default:
-        console.log(`Unknown action: '${args[0]}'.`);
-        console.log("Type 'help' for a list of available actions.");
-        break;
+  rl.on("line", line => {
+    try {
+      const args = line.split(/\s+/);
+      switch (args[0]) {
+        default:
+          console.log(`Unknown action: '${args[0]}'.`);
+          console.log("Type 'help' for a list of available actions.");
+          break;
 
-      case "help":
-        console.log("Available actions:");
-        console.log("  help - Show this help message.");
-        console.log("  game:start - Start pending level.");
-        console.log("  quit - Quit the server.");
-        break;
+        case "help":
+          console.log("Available actions:");
+          console.log("  help          - Show this help message.");
+          console.log("  player --list - List connected players.");
+          console.log("  scene         - Show information about current scene.");
+          console.log("  scene --list  - List available scenes.");
+          console.log("  scene <id>    - Switch to identified scene.");
+          console.log("  quit          - Quit the server.");
+          break;
 
-      case "game:start":
-        console.log("Starting the game...");
-        break;
+        case "player":
+          if (args[1] === "--list") {
+            console.log("Connected players:");
+            for (const player of world.players.values()) {
+              console.log(`- ${player.id} (${player.name})`);
+            }
+          } else {
+            console.log("Usage: player --list");
+          }
+          break;
 
-      case "quit":
-        console.log("Bye!");
+        case "scene":
+          if (args.length === 1) {
+            console.log("Current scene:");
+            console.log(" id:", world.scene.id);
+          } else if (args[1] === "--list") {
+            console.log("Available scenes:");
+            for (const sceneId of world.scenes.keys()) {
+              console.log(`- ${sceneId}`);
+            }
+          } else if (args[1]) {
+            world.setSceneById(args[1]);
+          } else {
+            console.log("Usage: scene [--list | <id>]");
+          }
+          break;
 
-        await webServer.stop();
-        await playerServer.stop();
-
-        rl.close();
-        process.exit(0);
+        case "quit":
+          quit();
+      }
+    } catch (error) {
+      if (error instanceof ProtocolError) {
+        console.log(error.message);
+      } else {
+        throw error;
+      }
     }
     rl.prompt();
   });
   rl.prompt();
 })();
+
+async function quit() {
+  console.log("Bye!");
+
+  await webServer.stop();
+  await playerServer.stop();
+
+  rl.close();
+  process.exit(0);
+}

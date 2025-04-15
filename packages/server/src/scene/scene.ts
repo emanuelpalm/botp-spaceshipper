@@ -1,42 +1,34 @@
-import { DataBackground, DataStateScene } from "@spaceshipper/common";
-import { ProtocolError } from "../protocol-error.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
+import { DataBackground, DataEntity, DataPlayer } from "@spaceshipper/common";
+import { ProtocolError } from "../error.ts";
 
-export class Scene {
-  public id: string;
-  public background: DataBackground;
-  public entities: Map<string, ServerEntity>;
+export abstract class Scene {
+  readonly id: string;
+  readonly players: Map<DataPlayer["id"], DataPlayer> = new Map();
 
-  constructor(id: string, background: DataBackground, entities: ServerEntity[]) {
+  abstract readonly background: DataBackground;
+
+  protected abstract readonly nonPlayerEntities: DataEntity[];
+
+  get entities(): DataEntity[] {
+    return [...this.nonPlayerEntities, ...this.players.values()];
+  }
+
+  constructor(id: Scene["id"]) {
     this.id = id;
-    this.background = background;
-    this.entities = new Map(entities.map(entity => [entity.data.id, entity]));
   }
 
-  getState(worldId: string): DataStateScene {
-    return {
-      sceneId: `/${worldId}/${this.id}`,
-      background: this.background,
-      entities: [...this.entities.values()].map(entity => entity.data),
-    };
-  }
-
-  join(_playerId: string, name: string): void {
+  join(_playerId: DataPlayer["id"], _name: DataPlayer["name"]): void {
     throw new ProtocolError("It is not permitted to join at this time.");
   }
 
-  leave(playerId: string): void {
-    const player = this.entities.get(playerId);
+  leave(playerId: DataPlayer["id"]): void {
+    const player = this.players.get(playerId);
     if (player) {
-      player.data.opacity = 0;
-      player.data.dx = 0;
-      player.data.dy = 0;
+      player.opacity = 0;
+      player.dx = 0;
+      player.dy = 0;
     }
   }
 
-  update(dt: number): void {
-    for (const entity of this.entities.values()) {
-      entity.update(dt);
-    }
-  }
+  abstract update(dt: number): void;
 }

@@ -64,15 +64,17 @@ export class ClientBackgroundStars implements ClientBackground {
       star.x += star.velocity * this.data.dx * dt;
       star.y += star.velocity * this.data.dy * dt;
 
-      if (star.x < 0) {
-        star.x = this.data.width;
-      } else if (star.x > this.data.width) {
-        star.x = 0;
+      while (star.x < 0) {
+        star.x += this.data.width;
       }
-      if (star.y < 0) {
-        star.y = this.data.height;
-      } else if (star.y > this.data.height) {
-        star.y = 0;
+      while (star.x > this.data.width) {
+        star.x -= this.data.width;
+      }
+      while (star.y < 0) {
+        star.y += this.data.height;
+      }
+      while (star.y > this.data.height) {
+        star.y -= this.data.height;
       }
     }
   }

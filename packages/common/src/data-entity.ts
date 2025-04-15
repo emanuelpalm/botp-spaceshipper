@@ -14,6 +14,12 @@ export interface DataEntity {
   paletteId: PaletteId;
 }
 
+export interface DataEntityMap {
+  [DataEntityType.Player]: DataPlayer;
+  [DataEntityType.Portal]: DataPortal;
+  [DataEntityType.Text]: DataText;
+}
+
 export enum DataEntityType {
   Player = 0,
   Portal = 1,
@@ -38,4 +44,8 @@ export interface DataText extends DataEntity {
   font: string;
   fontSize: number;
   fontWeight: number;
+}
+
+export function isDataEntityOfType<K extends DataEntityType>(entity: DataEntity, type: K): entity is DataEntityMap[K] {
+  return entity.type === type;
 }

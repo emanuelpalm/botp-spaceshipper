@@ -1,20 +1,21 @@
-import { DataStateScene } from "@spaceshipper/common";
+import { DataState } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
 import { Server as IoServer, Socket } from "socket.io";
 
 export class WebServer {
+  public port: number;
+
   private app: Express;
   private io: IoServer | undefined;
-  private port: number;
   private server: HttpServer | undefined;
 
   private listeners: Set<WebServerListener> = new Set();
   private sockets: Set<Socket> = new Set();
 
   constructor(port: number) {
-    this.app = express();
     this.port = port;
+    this.app = express();
   }
 
   addListener(listener: WebServerListener): void {
@@ -47,10 +48,7 @@ export class WebServer {
           }
         });
       });
-      this.server.listen(this.port, () => {
-        console.log(`Web server running on port ${this.port}.`);
-        resolve();
-      });
+      this.server.listen(this.port, () => resolve());
     });
   }
 
@@ -65,7 +63,7 @@ export class WebServer {
     });
   }
 
-  publishState(state: DataStateScene) {
+  publishState(state: DataState) {
     for (const socket of this.sockets) {
       socket.emit("state", state);
     }

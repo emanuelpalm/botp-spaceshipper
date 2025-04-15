@@ -1,32 +1,65 @@
-import { DataStateScene } from '@spaceshipper/common';
+import { DataPlayer, DataState } from '@spaceshipper/common';
 import { Scene } from './scene/scene.ts';
+import { Lobby } from './scene/lobby.ts';
+import { ProtocolError } from './error.ts';
+import random from './util/random.ts';
+import { Level0 } from './scene/level0.ts';
+
+const scenes = [
+  new Lobby(),
+  new Level0(),
+];
+
+const mapIdToScene: Map<Scene["id"], Scene> = new Map(scenes.map(scene => [scene.id, scene]));
 
 export class World {
-  private readonly worldId: string = `world-${Math.random().toString(36).substring(2, 9)}`;
+  readonly id: string = random.createId();
 
-  private scene: Scene;
+  get players(): Map<DataPlayer["id"], DataPlayer> {
+    return this._scene.players;
+  }
+  
+  get scenes(): Map<Scene["id"], Scene> {
+    return mapIdToScene;
+  }
+  
+  private _scene: Scene = scenes[0];
 
-  constructor(scene: Scene) {
-    this.scene = scene;
+  get scene(): Scene {
+    return this._scene;
   }
 
-  getState(): DataStateScene {
-    return this.scene.getState(this.worldId);
+  get state(): DataState {
+    return {
+      worldId: this.id,
+      sceneId: this._scene.id,
+      background: this._scene.background,
+      entities: this._scene.entities,
+    };
   }
 
-  execute(action: string) {
-    console.log(action);
+  setSceneById(sceneId: string) {
+    const scene = this.scenes.get(sceneId);
+    if (!scene) {
+      throw new ProtocolError(`Scene '${sceneId}' not found.`);
+    }
+    scene.players.clear();
+    for (const player of this._scene.players.values()) {
+      scene.players.set(player.id, player);
+    }
+    this._scene.players.clear();
+    this._scene = scene;
   }
 
   join(playerId: string, name: string): void {
-    this.scene.join(playerId, name);
+    this._scene.join(playerId, name);
   }
 
   leave(playerId: string): void {
-    this.scene.leave(playerId);
+    this._scene.leave(playerId);
   }
 
   update(dt: number) {
-    this.scene.update(dt);
+    this._scene.update(dt);
   }
 }
