@@ -49,6 +49,7 @@ export class World {
     }
     this._scene.players.clear();
     this._scene = scene;
+    this._scene.start();
   }
 
   join(playerId: string, name: string): void {

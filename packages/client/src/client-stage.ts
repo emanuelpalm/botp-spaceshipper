@@ -22,7 +22,7 @@ export class ClientStage {
     this.background.draw(ctx);
 
     for (const entity of this.entities.values()) {
-      if (entity.data.opacity > 0) {
+      if (entity.data.enabled) {
         ctx.save();
         ctx.translate(entity.data.x, entity.data.y);
         entity.draw(ctx);

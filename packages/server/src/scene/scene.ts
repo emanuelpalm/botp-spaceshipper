@@ -17,6 +17,8 @@ export abstract class Scene {
     this.id = id;
   }
 
+  abstract start(): void;
+
   join(_playerId: DataPlayer["id"], _name: DataPlayer["name"]): void {
     throw new ProtocolError("It is not permitted to join at this time.");
   }

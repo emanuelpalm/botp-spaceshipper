@@ -10,6 +10,7 @@ export interface DataEntity {
   dx: number;
   dy: number;
 
+  enabled: boolean;
   opacity: number;
   paletteId: PaletteId;
 }

@@ -16,6 +16,7 @@ export class Lobby extends Scene {
     type: DataEntityType.Text,
     x: 480, y: 200,
     dx: 0, dy: 0,
+    enabled: true,
     opacity: 1,
     paletteId: PaletteId.Delta,
     font: "Smoosh Sans", fontSize: 72, fontWeight: 100,
@@ -27,6 +28,7 @@ export class Lobby extends Scene {
     type: DataEntityType.Text,
     x: 480, y: 260,
     dx: 0, dy: 0,
+    enabled: true,
     opacity: 1,
     paletteId: PaletteId.Gamma,
     font: "Oxanium", fontSize: 35, fontWeight: 400,
@@ -38,7 +40,8 @@ export class Lobby extends Scene {
     type: DataEntityType.Text,
     x: 480, y: 312,
     dx: 0, dy: 0,
-    opacity: 0,
+    enabled: true,
+    opacity: 1,
     paletteId: PaletteId.Gamma,
     font: "Smoosh Sans", fontSize: 24, fontWeight: 500,
     text: "Waiting for players to join ...",
@@ -56,6 +59,8 @@ export class Lobby extends Scene {
     ];
   }
 
+  override start(): void {}
+
   override join(playerId: DataPlayer["id"], name: DataPlayer["name"]): void {
     const player = this.createPlayer(playerId, name);
     this.players.set(playerId, player);
@@ -68,6 +73,7 @@ export class Lobby extends Scene {
       type: DataEntityType.Player,
       x: 0, y: 0,
       dx: 0, dy: 0,
+      enabled: false,
       opacity: 1,
       paletteId: getPlayerPaletteId(this.players.size),
       name,
@@ -97,6 +103,8 @@ export class Lobby extends Scene {
 
         player.dx = 0;
         player.dy = 0.0001;
+
+        player.enabled = true;
       }
     }
   }
@@ -105,6 +113,6 @@ export class Lobby extends Scene {
     this.time += dt;
 
     // Make the waiting text blink.
-    this.textWaiting.opacity = (this.time & 1) === 1 ? 1 : 0;
+    this.textWaiting.enabled = (this.time & 1) === 1;
   }
 }
