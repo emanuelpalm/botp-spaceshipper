@@ -60,9 +60,9 @@ setInterval(() => {
   console.log("██╔══██╗       ██╗  ██╔══██╗");
   console.log("██████╔╝ ████╗█████╗██████╔╝");
   console.log("██╔══██╗██╔═██╬██╔═╝██╔═══╝");
-  console.log("██████╔╝╚████╔╝██║  ██║");
-  console.log("╚═════╝  ╚═══╝ ╚██╗ ╚═╝");
-  console.log("                ╚═╝")
+  console.log("██████╔╝╚████╔╝╚███╗██║");
+  console.log("╚═════╝  ╚═══╝  ╚══╝╚═╝");
+  console.log();
   console.log(" THE SPACESHIPPER CHALLENGE");
   console.log();
 
@@ -97,7 +97,7 @@ setInterval(() => {
           if (args[1] === "--list") {
             console.log("Connected players:");
             for (const player of world.players.values()) {
-              console.log(`- ${player.id} (${player.name})`);
+              console.log(`- id: ${player.id}, name: ${player.name}, score: ${player.score}`);
             }
           } else {
             console.log("Usage: player --list");
