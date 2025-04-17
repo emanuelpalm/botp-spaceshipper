@@ -18,11 +18,11 @@ export class World {
   get players(): Map<DataPlayer["id"], DataPlayer> {
     return this._scene.players;
   }
-  
+
   get scenes(): Map<Scene["id"], Scene> {
     return mapIdToScene;
   }
-  
+
   private _scene: Scene = scenes[0];
 
   get scene(): Scene {
@@ -43,12 +43,14 @@ export class World {
     if (!scene) {
       throw new ProtocolError(`Scene '${sceneId}' not found.`);
     }
-    scene.players.clear();
-    for (const player of this._scene.players.values()) {
-      scene.players.set(player.id, player);
+    if (this._scene !== scene) {
+      scene.players.clear();
+      for (const player of this._scene.players.values()) {
+        scene.players.set(player.id, player);
+      }
+      this._scene.players.clear();
+      this._scene = scene;
     }
-    this._scene.players.clear();
-    this._scene = scene;
     this._scene.start();
   }
 
