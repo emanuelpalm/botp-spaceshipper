@@ -1,6 +1,7 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntity, DataEntityType, DataPlayer, DataPortal, DataText, PaletteId } from "@spaceshipper/common";
 import { Scene } from "./scene.ts";
-import { intersects } from "../util/math2d.ts";
+import { directionTo, intersects, resize } from "../util/math2d.ts";
+import { normalize } from "node:path";
 
 export class Level0 extends Scene {
   override readonly background: DataBackgroundStars = {
@@ -14,7 +15,7 @@ export class Level0 extends Scene {
     return [
       this.textCountdown,
       this.textScores,
-      ...this.textScorePerPlayer,
+      ...this.mapPlayerIdToTextScore.values(),
       this.portalTarget,
     ];
   }
@@ -43,7 +44,19 @@ export class Level0 extends Scene {
     text: "SCORES",
   }
 
-  private textScorePerPlayer: DataText[] = [];
+  private textCenter: DataText = {
+    id: "textCenter",
+    type: DataEntityType.Text,
+    x: 480, y: 270,
+    dx: 0, dy: 0,
+    enabled: false,
+    opacity: 1,
+    paletteId: PaletteId.Delta,
+    font: "Oxanium", fontSize: 32, fontWeight: 700,
+    text: "Reach the target!",
+  }
+
+  private mapPlayerIdToTextScore: Map<DataPlayer["id"], DataText> = new Map();
 
   private portalTarget: DataPortal = {
     id: "portal",
@@ -70,8 +83,20 @@ export class Level0 extends Scene {
 
   override start(): void {
     this.mapPlayerIdToStats.clear();
-    for (const playerId of this.players.keys()) {
+    for (const [playerId, player] of this.players) {
       this.mapPlayerIdToStats.set(playerId, { rounds: [] });
+
+      this.mapPlayerIdToTextScore.set(playerId, {
+        id: `textScore-${playerId}`,
+        type: DataEntityType.Text,
+        x: 480, y: 130 + (this.mapPlayerIdToTextScore.size * 30),
+        dx: 0, dy: 0,
+        enabled: false,
+        opacity: 1,
+        paletteId: player.paletteId,
+        font: "Smoosh Sans", fontSize: 24, fontWeight: 500,
+        text: "",
+      });
     }
 
     this.setRound(this.roundIndex);
@@ -80,23 +105,28 @@ export class Level0 extends Scene {
   private setRound(index: number): void {
     const round = ROUNDS[index];
 
+    this.textScores.enabled = false;
+
+    for (const textScore of this.mapPlayerIdToTextScore.values()) {
+      textScore.enabled = false;
+    }
+
+    for (const player of this.players.values()) {
+      player.x = round.startX + (Math.random() - 0.5) * 60;
+      player.y = round.startY + (Math.random() - 0.5) * 60;
+
+      const [dx, dy] = directionTo(player.x, player.y, round.targetX, round.targetY);
+      [player.dx, player.dy] = resize(dx, dy, 200);
+
+      player.enabled = true;
+    }
+
     this.deadline = round.deadline;
     this.portalTarget.x = round.targetX;
     this.portalTarget.y = round.targetY;
     this.roundIsLive = true;
+    this.roundPlayersRemaining = this.players.size;
     this.time = 0;
-    this.textScores.enabled = false;
-    this.textScorePerPlayer = [];
-
-    this.roundPlayersRemaining = 0;
-    for (const player of this.players.values()) {
-      this.roundPlayersRemaining += 1;
-
-      player.x = round.startX + (Math.random() - 0.5) * 60;
-      player.y = round.startY + (Math.random() - 0.5) * 60;
-      player.dx = (Math.random() - 0.5) * 0.001 + 200;
-      player.dy = (Math.random() - 0.5) * 0.001;
-    }
   }
 
   override update(dt: number) {
@@ -117,11 +147,9 @@ export class Level0 extends Scene {
     if (this.roundIsLive) {
       // Handle any players reaching the target.
       for (const player of this.players.values()) {
-        if (intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
+        if (player.enabled && intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
           this.roundPlayersRemaining -= 1;
-          this.mapPlayerIdToStats.get(player.id)!
-            .rounds.push({ finished: true, finishedAfter: this.time });
-
+          this.mapPlayerIdToStats.get(player.id)!.rounds.push({ finished: true, finishedAfter: this.time });
           player.enabled = false;
         }
       }
@@ -134,10 +162,10 @@ export class Level0 extends Scene {
         this.textScores.enabled = true;
 
         for (const [playerId, player] of this.players) {
-          const round = this.mapPlayerIdToStats.get(playerId)!.rounds[this.roundIndex];
+          const round = this.mapPlayerIdToStats.get(playerId)!.rounds?.[this.roundIndex];
 
           let text;
-          if (round.finished) {
+          if (round?.finished) {
             const roundScore = Math.round(round.finishedAfter * ROUNDS[this.roundIndex].scorePerRemainingSecond);
             player.score += roundScore;
             text = `${player.name}: ${player.score} (+${roundScore})`;
@@ -145,17 +173,9 @@ export class Level0 extends Scene {
             text = `${player.name}: ${player.score}`;
           }
 
-          this.textScorePerPlayer.push({
-            id: `textScore-${playerId}`,
-            type: DataEntityType.Text,
-            x: 480, y: 130 + (this.textScorePerPlayer.length * 30),
-            dx: 0, dy: 0,
-            enabled: true,
-            opacity: 1,
-            paletteId: PaletteId.Iota,
-            font: "Smoosh Sans", fontSize: 24, fontWeight: 500,
-            text,
-          });
+          const textScore = this.mapPlayerIdToTextScore.get(playerId)!;
+          textScore.text = text;
+          textScore.enabled = true;
         }
       }
     } else if (timeLeft <= 0) {
