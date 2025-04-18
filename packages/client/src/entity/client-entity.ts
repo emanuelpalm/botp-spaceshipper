@@ -1,7 +1,8 @@
-import { DataEntity, DataEntityType, DataPortal, DataPlayer, DataText } from "@spaceshipper/common";
+import { DataEntity, DataEntityType, DataPortal, DataPlayer, DataText, DataBlackHole } from "@spaceshipper/common";
 import { ClientPortal } from "./client-portal";
 import { ClientPlayer } from "./client-player";
 import { ClientText } from "./client-text";
+import { ClientBlackHole } from "./client-black-hole";
 
 export interface ClientEntity {
   data: DataEntity
@@ -24,6 +25,10 @@ export function createOrUpdateClientEntity(data: DataEntity, map: Map<DataEntity
 
       case DataEntityType.Text:
         entity = new ClientText(data as DataText);
+        break;
+
+      case DataEntityType.BlackHole:
+        entity = new ClientBlackHole(data as DataBlackHole);
         break;
 
       default:

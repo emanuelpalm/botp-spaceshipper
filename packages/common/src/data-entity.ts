@@ -19,12 +19,14 @@ export interface DataEntityMap {
   [DataEntityType.Player]: DataPlayer;
   [DataEntityType.Portal]: DataPortal;
   [DataEntityType.Text]: DataText;
+  [DataEntityType.BlackHole]: DataBlackHole;
 }
 
 export enum DataEntityType {
   Player = 0,
   Portal = 1,
   Text = 2,
+  BlackHole = 3,
 }
 
 export interface DataPlayer extends DataEntity {
@@ -45,6 +47,11 @@ export interface DataText extends DataEntity {
   font: string;
   fontSize: number;
   fontWeight: number;
+}
+
+export interface DataBlackHole extends DataEntity {
+  type: DataEntityType.BlackHole;
+  radius: number;
 }
 
 export function isDataEntityOfType<K extends DataEntityType>(entity: DataEntity, type: K): entity is DataEntityMap[K] {

@@ -1,14 +1,11 @@
 import { ClientEntity } from "./client-entity";
-import { DataPlayer, getPalette, Palette } from "@spaceshipper/common";
+import { DataPlayer, getPalette } from "@spaceshipper/common";
 
 export class ClientPlayer implements ClientEntity {
   public data: DataPlayer;
 
-  private palette: Palette;
-
   constructor(data: DataPlayer) {
     this.data = data;
-    this.palette = getPalette(data.paletteId);
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -17,6 +14,8 @@ export class ClientPlayer implements ClientEntity {
 
     // Calculate intensity (0 to 1) based on velocity
     const intensity = (1 - 1 / (Math.sqrt(this.data.dx * this.data.dx + this.data.dy * this.data.dy) / 300 + 1));
+
+    const palette = getPalette(this.data.paletteId);
 
     // Draw name.
     ctx.textAlign = "center";
@@ -36,7 +35,7 @@ export class ClientPlayer implements ClientEntity {
     ctx.lineTo(6, -16);
     ctx.lineTo(12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.palette.tint, 1, this.palette.secondary);
+    this.stroke(ctx, 3, palette.tint, 1, palette.secondary);
 
     // Draw body lower right wing
     ctx.beginPath();
@@ -46,7 +45,7 @@ export class ClientPlayer implements ClientEntity {
     ctx.lineTo(-6, -16);
     ctx.lineTo(-12, -13);
     ctx.closePath();
-    this.stroke(ctx, 3, this.palette.tint, 1, this.palette.secondary);
+    this.stroke(ctx, 3, palette.tint, 1, palette.secondary);
 
     // Draw body center
     ctx.beginPath();
@@ -58,7 +57,7 @@ export class ClientPlayer implements ClientEntity {
     ctx.lineTo(-3, -12);
     ctx.lineTo(-2, -15);
     ctx.closePath();
-    this.stroke(ctx, 3.5, this.palette.tint, 1.5, this.palette.secondary);
+    this.stroke(ctx, 3.5, palette.tint, 1.5, palette.secondary);
 
     // Draw body upper left wing
     ctx.beginPath();
@@ -69,7 +68,7 @@ export class ClientPlayer implements ClientEntity {
     ctx.lineTo(9, 1);
     ctx.lineTo(6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.palette.tint, 2, this.palette.primary);
+    this.stroke(ctx, 4, palette.tint, 2, palette.primary);
 
     // Draw body upper right wing
     ctx.beginPath();
@@ -80,7 +79,7 @@ export class ClientPlayer implements ClientEntity {
     ctx.lineTo(-9, 1);
     ctx.lineTo(-6, 13);
     ctx.closePath();
-    this.stroke(ctx, 4, this.palette.tint, 2, this.palette.primary);
+    this.stroke(ctx, 4, palette.tint, 2, palette.primary);
 
     // Draw thruster
     if (intensity > 0.05) {

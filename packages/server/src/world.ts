@@ -4,10 +4,12 @@ import { Lobby } from './scene/lobby.ts';
 import { ProtocolError } from './error.ts';
 import random from './util/random.ts';
 import { Level0 } from './scene/level0.ts';
+import { Gallery } from './scene/gallery.ts';
 
 const scenes = [
   new Lobby(),
   new Level0(),
+  new Gallery(),
 ];
 
 const mapIdToScene: Map<Scene["id"], Scene> = new Map(scenes.map(scene => [scene.id, scene]));

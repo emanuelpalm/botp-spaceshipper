@@ -59,7 +59,9 @@ export class Lobby extends Scene {
     ];
   }
 
-  override start(): void {}
+  override start(): void {
+    this.positionPlayers();
+  }
 
   override join(playerId: DataPlayer["id"], name: DataPlayer["name"]): void {
     const player = this.createPlayer(playerId, name);

@@ -6,7 +6,12 @@ export interface DataBackground {
 }
 
 export enum DataBackgroundType {
+  Empty,
   Stars,
+}
+
+export interface DataBackgroundEmpty extends DataBackground {
+  type: DataBackgroundType.Empty;
 }
 
 export interface DataBackgroundStars extends DataBackground {

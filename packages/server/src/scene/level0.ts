@@ -1,4 +1,4 @@
-import { DataBackgroundStars, DataBackgroundType, DataEntity, DataEntityType, DataPlayer, DataPortal, DataText, PaletteId } from "@spaceshipper/common";
+import { DataBackgroundStars, DataBackgroundType, DataBlackHole, DataEntity, DataEntityType, DataPlayer, DataPortal, DataText, PaletteId } from "@spaceshipper/common";
 import { Scene } from "./scene.ts";
 import { directionTo, intersects, resize } from "../util/math2d.ts";
 import { formatTime } from "../util/format.ts";
@@ -59,15 +59,14 @@ export class Level0 extends Scene {
 
   private textPlayerScores: DataText[] = [];
 
-  private portalTarget: DataPortal = {
+  private portalTarget: DataBlackHole = {
     id: "portal",
-    type: DataEntityType.Portal,
+    type: DataEntityType.BlackHole,
     x: 480, y: 400,
     dx: 0, dy: 0,
     paletteId: PaletteId.Target,
     enabled: false,
     opacity: 1,
-    name: "TARGET",
     radius: 58,
   };
 

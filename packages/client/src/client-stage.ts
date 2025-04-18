@@ -29,6 +29,7 @@ export class ClientStage {
     for (const entity of this.mapEntityIdToEntity.values()) {
       if (entity.data.enabled) {
         ctx.save();
+        ctx.globalAlpha = entity.data.opacity;
         ctx.translate(entity.data.x, entity.data.y);
         entity.draw(ctx);
         ctx.restore();
