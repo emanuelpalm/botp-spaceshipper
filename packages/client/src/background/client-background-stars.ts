@@ -14,7 +14,7 @@ export class ClientBackgroundStars implements ClientBackground {
   private generateStars(count: number): Star[] {
     const stars: Star[] = [];
     for (let i = 0; i < count; i++) {
-      const intensity = 0.25 + Math.pow(Math.random() * 0.75, 2);
+      const intensity = 0.1 + Math.pow(Math.random(), 2) * 0.9;
       stars.push({
         x: Math.random() * this.data.width,
         y: Math.random() * this.data.height,

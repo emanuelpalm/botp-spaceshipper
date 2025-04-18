@@ -3,25 +3,30 @@ import { ClientEntity, createOrUpdateClientEntity } from './entity/client-entity
 import { ClientBackground, createClientBackground } from './background/client-background';
 
 export class ClientStage {
-  private readonly background: ClientBackground;
-  private readonly entities: Map<DataEntity["id"], ClientEntity> = new Map();
+  private readonly _background: ClientBackground;
+
+  set background(value: DataBackground) {
+    this._background.data = value;
+  }
+
+  private readonly mapEntityIdToEntity: Map<DataEntity["id"], ClientEntity> = new Map();
 
   private dt: number = 1;
 
-  set data(value: DataEntity[]) {
+  set entities(value: DataEntity[]) {
     for (const entity of value) {
-      createOrUpdateClientEntity(entity, this.entities);
+      createOrUpdateClientEntity(entity, this.mapEntityIdToEntity);
     }
   }
 
   constructor(background: DataBackground) {
-    this.background = createClientBackground(background);
+    this._background = createClientBackground(background);
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    this.background.draw(ctx);
+    this._background.draw(ctx);
 
-    for (const entity of this.entities.values()) {
+    for (const entity of this.mapEntityIdToEntity.values()) {
       if (entity.data.enabled) {
         ctx.save();
         ctx.translate(entity.data.x, entity.data.y);
@@ -38,15 +43,15 @@ export class ClientStage {
     ctx.font = '12px Oxanium';
     ctx.textAlign = "right";
     ctx.textBaseline = "bottom";
-    ctx.fillText(`FPS: ${fps.toFixed(2)}`, this.background.data.width - 20, this.background.data.height - 20);
+    ctx.fillText(`FPS: ${fps.toFixed(2)}`, this._background.data.width - 20, this._background.data.height - 20);
   }
 
   update(dt: number) {
     this.dt = dt;
 
-    this.background.update(dt);
+    this._background.update(dt);
 
-    for (const entity of this.entities.values()) {
+    for (const entity of this.mapEntityIdToEntity.values()) {
       entity.update(dt);
     }
   }

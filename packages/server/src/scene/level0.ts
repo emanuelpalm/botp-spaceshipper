@@ -8,7 +8,7 @@ export class Level0 extends Scene {
     type: DataBackgroundType.Stars,
     width: 960, height: 540,
     starCount: 200,
-    dx: 10 * (Math.random() - 0.5), dy: 10 * (Math.random() - 0.5),
+    dx: 30 * (Math.random() - 0.5), dy: 30 * (Math.random() - 0.5),
   };
 
   override get nonPlayerEntities(): DataEntity[] {
@@ -293,27 +293,27 @@ const ROUNDS: Round[] = [
     scorePerRemainingSecond: 2,
     startX: 900, startY: 270,
     targetX: 60, targetY: 270,
-    targetDX: 0, targetDY: 0,
+    targetDX: 1, targetDY: 2,
   },
   {
     deadline: 30,
     scorePerRemainingSecond: 3,
     startX: 60, startY: 60,
     targetX: 900, targetY: 480,
-    targetDX: 0, targetDY: 0,
+    targetDX: -4, targetDY: -2,
   },
   {
     deadline: 20,
     scorePerRemainingSecond: 4,
     startX: 900, startY: 480,
     targetX: 60, targetY: 60,
-    targetDX: 7, targetDY: 0,
+    targetDX: 7, targetDY: -6,
   },
   {
     deadline: 16,
     scorePerRemainingSecond: 5,
     startX: 60, startY: 480,
     targetX: 60, targetY: 60,
-    targetDX: 67, targetDY: 32,
+    targetDX: 57, targetDY: 27,
   },
 ];

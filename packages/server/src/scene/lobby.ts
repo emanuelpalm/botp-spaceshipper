@@ -5,7 +5,7 @@ export class Lobby extends Scene {
   override readonly background: DataBackgroundStars = {
     type: DataBackgroundType.Stars,
     width: 960, height: 540,
-    starCount: 400,
+    starCount: 300,
     dx: 0, dy: -50,
   };
 

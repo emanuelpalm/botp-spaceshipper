@@ -29,7 +29,8 @@ export class ClientState {
       resize = true;
     }
     this._data = data;
-    this._stage.data = data.entities;
+    this._stage.background = data.background;
+    this._stage.entities = data.entities;
 
     if (resize) {
       this.resize();
