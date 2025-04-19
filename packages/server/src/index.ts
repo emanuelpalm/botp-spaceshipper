@@ -60,13 +60,13 @@ setInterval(() => {
 // Start servers and readline interface.
 (async () => {
   console.log();
-  console.log("██████╗             ██████╗");
-  console.log("██╔══██╗       ██╗  ██╔══██╗");
+  console.log("██████╗   * .      .██████╗");
+  console.log("██╔══██╗ .   . ██╗* ██╔══██╗");
   console.log("██████╔╝ ████╗█████╗██████╔╝");
-  console.log("██╔══██╗██╔═██╬██╔═╝██╔═══╝");
-  console.log("██████╔╝╚████╔╝╚███╗██║");
-  console.log("╚═════╝  ╚═══╝  ╚══╝╚═╝");
-  console.log();
+  console.log("██╔══██╗██╔═██╬██╔═╝██╔═══╝.");
+  console.log("██████╔╝╚████╔╝╚███╗██║ *");
+  console.log("╚═════╝ *╚═══╝. ╚══╝╚═╝.   *");
+  console.log("  .        . *   .    .");
   console.log(" THE SPACESHIPPER CHALLENGE");
   console.log();
 
