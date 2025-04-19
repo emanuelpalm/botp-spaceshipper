@@ -20,6 +20,8 @@ export interface DataEntityMap {
   [DataEntityType.Portal]: DataPortal;
   [DataEntityType.Text]: DataText;
   [DataEntityType.BlackHole]: DataBlackHole;
+  [DataEntityType.Sentry]: DataSentry;
+  [DataEntityType.SentryShot]: DataSentryShot;
 }
 
 export enum DataEntityType {
@@ -27,6 +29,8 @@ export enum DataEntityType {
   Portal = 1,
   Text = 2,
   BlackHole = 3,
+  Sentry = 4,
+  SentryShot = 5,
 }
 
 export interface DataPlayer extends DataEntity {
@@ -52,6 +56,15 @@ export interface DataText extends DataEntity {
 export interface DataBlackHole extends DataEntity {
   type: DataEntityType.BlackHole;
   radius: number;
+}
+
+export interface DataSentry extends DataEntity {
+  type: DataEntityType.Sentry;
+  angle: number;
+}
+
+export interface DataSentryShot extends DataEntity {
+  type: DataEntityType.SentryShot;
 }
 
 export function isDataEntityOfType<K extends DataEntityType>(entity: DataEntity, type: K): entity is DataEntityMap[K] {

@@ -16,3 +16,7 @@ export function resize(x: number, y: number, s: number): [number, number] {
   const length = Math.sqrt(x * x + y * y);
   return [x / length * s, y / length * s];
 }
+
+export function angle(dx: number, dy: number): number {
+  return Math.atan2(dy, dx);
+}

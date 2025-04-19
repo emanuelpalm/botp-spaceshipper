@@ -1,4 +1,4 @@
-import { DataBackgroundEmpty, DataBackgroundType, DataBlackHole, DataEntity, DataEntityType, DataPlayer, DataPortal, DataText, PaletteId } from "@spaceshipper/common";
+import { DataBackgroundEmpty, DataBackgroundType, DataBlackHole, DataEntity, DataEntityType, DataPlayer, DataPortal, DataSentry, DataSentryShot, DataText, PaletteId } from "@spaceshipper/common";
 import { Scene } from "./scene.ts";
 
 export class Gallery extends Scene {
@@ -144,6 +144,27 @@ export class Gallery extends Scene {
     radius: 74,
   }
 
+  private sentry: DataSentry = {
+    id: "sentry",
+    type: DataEntityType.Sentry,
+    x: 600, y: 250,
+    dx: 0, dy: 0,
+    enabled: true,
+    opacity: 1,
+    paletteId: PaletteId.Alpha,
+    angle: Math.PI / 2,
+  }
+
+  private sentryShot: DataSentryShot = {
+    id: "sentryShot",
+    type: DataEntityType.SentryShot,
+    x: 680, y: 250,
+    dx: 0.0001, dy: 0,
+    enabled: true,
+    opacity: 1,
+    paletteId: PaletteId.Alpha,
+  }
+
   constructor() {
     super("gallery");
 
@@ -161,6 +182,9 @@ export class Gallery extends Scene {
 
       this.portal,
       this.blackHole,
+
+      this.sentry,
+      this.sentryShot,
     ];
   }
 

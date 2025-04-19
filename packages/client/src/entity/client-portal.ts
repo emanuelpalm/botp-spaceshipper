@@ -29,7 +29,7 @@ export class ClientPortal implements ClientEntity {
     ctx.strokeStyle = palette.secondary;
     ctx.lineWidth = 2;
 
-    const crossSize = Math.max(this.data.radius * 0.2, 10); // Cross size is 20% of radius
+    const crossSize = Math.max(this.data.radius * 0.15, 10); // Cross size is 15% of radius
     ctx.beginPath();
     // Horizontal line
     ctx.moveTo(-crossSize, 0);
