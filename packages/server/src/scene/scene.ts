@@ -7,6 +7,8 @@ export abstract class Scene {
 
   abstract readonly background: DataBackground;
 
+  abstract readonly isPlaying: boolean;
+
   protected abstract readonly nonPlayerEntities: DataEntity[];
 
   get entities(): DataEntity[] {

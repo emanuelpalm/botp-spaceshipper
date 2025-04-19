@@ -1,4 +1,4 @@
-import { DataState } from "@spaceshipper/common";
+import { DataState, DataStateSimplified } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
 import { ProtocolError } from "./error.ts";
@@ -10,8 +10,8 @@ export class PlayerServer {
   private server: HttpServer | undefined;
   private listeners: Set<PlayerServerListener>;
   private players: Set<string> = new Set();
-  private state: DataState | undefined;
-  private stateHandlers = new Map<string, (state: DataState) => void>();
+  private state: DataStateSimplified | undefined;
+  private stateHandlers = new Map<string, (state: DataStateSimplified) => void>();
 
   constructor(port: number) {
     this.port = port;
@@ -117,7 +117,7 @@ export class PlayerServer {
       }
 
       // Create a state change handler
-      const stateHandler = (newState: DataState) => {
+      const stateHandler = (newState: DataStateSimplified) => {
         res.write(`data: ${JSON.stringify(newState)}\r\n\r\n`);
       };
 
@@ -157,7 +157,7 @@ export class PlayerServer {
     });
   }
 
-  publishState(state: DataState) {
+  publishState(state: DataStateSimplified) {
     this.state = state;
 
     // Notify all connected clients

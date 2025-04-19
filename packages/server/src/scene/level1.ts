@@ -11,6 +11,10 @@ export class Level1 extends Scene {
     dx: 60 * (Math.random() - 0.5), dy: 60 * (Math.random() - 0.5),
   };
 
+  override get isPlaying(): boolean {
+    return this.state === LevelState.Playing;
+  }
+
   override get nonPlayerEntities(): DataEntity[] {
     return [
       ...this.blackHoles,

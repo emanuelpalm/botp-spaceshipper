@@ -7,6 +7,8 @@ export class Gallery extends Scene {
     width: 960, height: 540,
   };
 
+  override readonly isPlaying: boolean = false;
+
   override get entities(): DataEntity[] {
     return this.nonPlayerEntities;
   }

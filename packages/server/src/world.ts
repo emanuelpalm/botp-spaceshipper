@@ -1,4 +1,4 @@
-import { DataPlayer, DataState } from '@spaceshipper/common';
+import { DataPlayer, DataState, DataStateSimplified } from '@spaceshipper/common';
 import { Scene } from './scene/scene.ts';
 import { Lobby } from './scene/lobby.ts';
 import { ProtocolError } from './error.ts';
@@ -39,8 +39,17 @@ export class World {
     return {
       worldId: this.id,
       sceneId: this._scene.id,
+      isPlaying: this._scene.isPlaying,
       background: this._scene.background,
       entities: this._scene.entities,
+    };
+  }
+
+  get stateSimplified(): DataStateSimplified {
+    return {
+      worldId: this.id,
+      sceneId: this._scene.id,
+      isPlaying: this._scene.isPlaying,
     };
   }
 

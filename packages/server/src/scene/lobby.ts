@@ -9,6 +9,8 @@ export class Lobby extends Scene {
     dx: 0, dy: -50,
   };
 
+  override readonly isPlaying: boolean = false;
+
   override readonly nonPlayerEntities: DataEntity[];
 
   private textTitle = {
