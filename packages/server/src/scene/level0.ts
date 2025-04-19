@@ -196,9 +196,16 @@ export class Level0 extends Scene {
     }
   }
 
-  private endRoundForPlayer(player: DataPlayer): void {
+  private endRoundForPlayer(player: DataPlayer, finished: boolean): void {
     this.roundPlayersRemaining -= 1;
-    this.mapPlayerIdToStats.get(player.id)!.rounds.push({ finished: true, finishedAfter: this.time });
+
+    const stats = this.mapPlayerIdToStats.get(player.id)!;
+    if (finished) {
+      stats.rounds.push({ finished: true, finishedAfter: this.time });
+    } else {
+      stats.rounds.push({ finished: false });
+    }
+
     player.enabled = false;
   }
 
@@ -226,10 +233,15 @@ export class Level0 extends Scene {
         // Show countdown.
         this.textCountdown.text = `ROUND ${this.roundIndex + 1}/${ROUNDS.length} ENDS IN ${formatTime(this.deadline - this.time)}`;
 
-        // Handle any players reaching the target.
+        // Handle any players reaching the target or exiting the screen.
         for (const player of this.players.values()) {
-          if (player.enabled && intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
-            this.endRoundForPlayer(player);
+          if (player.enabled) {
+            if (intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
+              this.endRoundForPlayer(player, true);
+            }
+            if (player.x < -10 || player.x > this.background.width + 10 || player.y < -10 || player.y > this.background.height + 10) {
+              this.endRoundForPlayer(player, false);
+            }
           }
         }
 

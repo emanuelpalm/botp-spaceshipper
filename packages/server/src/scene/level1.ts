@@ -262,7 +262,7 @@ export class Level1 extends Scene {
         // Show countdown.
         this.textCountdown.text = `ROUND ${this.roundIndex + 1}/${ROUNDS.length} ENDS IN ${formatTime(this.deadline - this.time)}`;
 
-        // Handle any players reaching the target.
+        // Handle any players reaching the target, falling into a black hole or exiting the screen.
         for (const player of this.players.values()) {
           if (player.enabled) {
             if (intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
@@ -272,6 +272,9 @@ export class Level1 extends Scene {
               if (intersects(player.x, player.y, 10, blackHole.x, blackHole.y, blackHole.radius - 10)) {
                 this.endRoundForPlayer(player, false);
               }
+            }
+            if (player.x < -10 || player.x > this.background.width + 10 || player.y < -10 || player.y > this.background.height + 10) {
+              this.endRoundForPlayer(player, false);
             }
           }
         }
