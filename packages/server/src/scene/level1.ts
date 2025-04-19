@@ -3,16 +3,17 @@ import { Scene } from "./scene.ts";
 import { directionTo, intersects, resize } from "../util/math2d.ts";
 import { formatTime } from "../util/format.ts";
 
-export class Level0 extends Scene {
+export class Level1 extends Scene {
   override readonly background: DataBackgroundStars = {
     type: DataBackgroundType.Stars,
     width: 960, height: 540,
-    starCount: 200,
-    dx: 30 * (Math.random() - 0.5), dy: 30 * (Math.random() - 0.5),
+    starCount: 300,
+    dx: 60 * (Math.random() - 0.5), dy: 60 * (Math.random() - 0.5),
   };
 
   override get nonPlayerEntities(): DataEntity[] {
     return [
+      ...this.blackHoles,
       ...this.textPlayerScores.values(),
       this.portalTarget,
       this.textCountdown,
@@ -42,7 +43,7 @@ export class Level0 extends Scene {
     opacity: 1,
     paletteId: PaletteId.Delta,
     font: "Oxanium", fontSize: 32, fontWeight: 700,
-    text: "Reach the target!",
+    text: "Avoid the black holes!",
   }
 
   private textScores: DataText = {
@@ -71,6 +72,17 @@ export class Level0 extends Scene {
     radius: 58,
   };
 
+  private blackHoles: DataBlackHole[] = [{ radius: 58 }, { radius: 78 }, { radius: 58 }, { radius: 98 }]
+    .map((blackHole, index) => ({
+      id: `blackHole-${index + 1}`,
+      type: DataEntityType.BlackHole,
+      x: 480, y: 400,
+      dx: 0, dy: 0,
+      paletteId: PaletteId.Epsilon,
+      enabled: false, opacity: 1,
+      radius: blackHole.radius,
+    }));
+
   private deadline: number = 0;
   private mapPlayerIdToStats: Map<DataPlayer["id"], PlayerStats> = new Map();
   private roundIndex: number = 0;
@@ -79,18 +91,18 @@ export class Level0 extends Scene {
   private time: number = 0;
 
   constructor() {
-    super("level0");
+    super("level1");
   }
 
   override start(): void {
     this.textCenter.enabled = true;
     this.textScores.enabled = false;
 
-    this.portalTarget.x = 480;
-    this.portalTarget.y = 400;
-    this.portalTarget.dx = 0;
-    this.portalTarget.dy = 0;
-    this.portalTarget.enabled = true;
+    this.blackHoles[0].x = 480;
+    this.blackHoles[0].y = 400;
+    this.blackHoles[0].dx = 0;
+    this.blackHoles[0].dy = 0;
+    this.blackHoles[0].enabled = true;
 
     for (const textScore of this.textPlayerScores) {
       textScore.enabled = false;
@@ -136,6 +148,19 @@ export class Level0 extends Scene {
       textScore.enabled = false;
     }
 
+    for (const blackHole of this.blackHoles) {
+      blackHole.enabled = false;
+    }
+
+    round.blackHoles.forEach((data, index) => {
+      const blackHole = this.blackHoles[index];
+      blackHole.x = data.x;
+      blackHole.y = data.y;
+      blackHole.dx = data.dx;
+      blackHole.dy = data.dy;
+      blackHole.enabled = true;
+    });
+
     this.portalTarget.x = round.targetX;
     this.portalTarget.y = round.targetY;
     this.portalTarget.dx = round.targetDX;
@@ -163,6 +188,10 @@ export class Level0 extends Scene {
     this.textCountdown.text = "";
     this.textScores.enabled = true;
     this.portalTarget.enabled = false;
+
+    for (const blackHole of this.blackHoles) {
+      blackHole.enabled = false;
+    }
 
     const playerScores: [PaletteId, string, number, number][] = [];
     for (const [playerId, player] of this.players) {
@@ -196,9 +225,16 @@ export class Level0 extends Scene {
     }
   }
 
-  private endRoundForPlayer(player: DataPlayer): void {
+  private endRoundForPlayer(player: DataPlayer, finished: boolean): void {
     this.roundPlayersRemaining -= 1;
-    this.mapPlayerIdToStats.get(player.id)!.rounds.push({ finished: true, finishedAfter: this.time });
+
+    const stats = this.mapPlayerIdToStats.get(player.id)!;
+    if (finished) {
+      stats.rounds.push({ finished: true, finishedAfter: this.time });
+    } else {
+      stats.rounds.push({ finished: false });
+    }
+
     player.enabled = false;
   }
 
@@ -228,8 +264,15 @@ export class Level0 extends Scene {
 
         // Handle any players reaching the target.
         for (const player of this.players.values()) {
-          if (player.enabled && intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
-            this.endRoundForPlayer(player);
+          if (player.enabled) {
+            if (intersects(player.x, player.y, 10, this.portalTarget.x, this.portalTarget.y, this.portalTarget.radius - 10)) {
+              this.endRoundForPlayer(player, true);
+            }
+            for (const blackHole of this.blackHoles) {
+              if (intersects(player.x, player.y, 10, blackHole.x, blackHole.y, blackHole.radius - 10)) {
+                this.endRoundForPlayer(player, false);
+              }
+            }
           }
         }
 
@@ -278,6 +321,8 @@ interface Round {
 
   targetDX: number;
   targetDY: number;
+
+  blackHoles: { x: number, y: number, dx: number, dy: number }[];
 }
 
 const ROUNDS: Round[] = [
@@ -287,6 +332,9 @@ const ROUNDS: Round[] = [
     startX: 60, startY: 270,
     targetX: 900, targetY: 270,
     targetDX: 0, targetDY: 0,
+    blackHoles: [
+      { x: 480, y: 270, dx: 0, dy: 0 },
+    ],
   },
   {
     deadline: 40,
@@ -294,6 +342,10 @@ const ROUNDS: Round[] = [
     startX: 900, startY: 270,
     targetX: 60, targetY: 270,
     targetDX: 1, targetDY: 2,
+    blackHoles: [
+      { x: 410, y: 235, dx: 0, dy: 0 },
+      { x: 620, y: 375, dx: 0, dy: 0 },
+    ],
   },
   {
     deadline: 30,
@@ -301,6 +353,11 @@ const ROUNDS: Round[] = [
     startX: 60, startY: 60,
     targetX: 900, targetY: 480,
     targetDX: -4, targetDY: -2,
+    blackHoles: [
+      { x: 120, y: 270, dx: 0, dy: 0 },
+      { x: 480, y: 270, dx: 4, dy: 22 },
+      { x: 620, y: 270, dx: 0, dy: 0 },
+    ],
   },
   {
     deadline: 20,
@@ -308,12 +365,24 @@ const ROUNDS: Round[] = [
     startX: 900, startY: 480,
     targetX: 60, targetY: 60,
     targetDX: 7, targetDY: -6,
+    blackHoles: [
+      { x: 120, y: 270, dx: 7, dy: -2 },
+      { x: 410, y: 235, dx: 13, dy: -14 },
+      { x: 620, y: 375, dx: 6, dy: 12 },
+    ],
   },
   {
     deadline: 16,
     scorePerRemainingSecond: 5,
     startX: 60, startY: 480,
-    targetX: 60, targetY: 60,
-    targetDX: 57, targetDY: 27,
+    targetX: 900, targetY: 60,
+    targetDX: 10, targetDY: 10,
+    blackHoles: [
+      { x: 120, y: 270, dx: 2, dy: 16 },
+      { x: 410, y: 235, dx: 4, dy: -8 },
+      { x: 620, y: 375, dx: -8, dy: 4 },
+      { x: 480, y: 400, dx: -16, dy: -2 },
+    ],
   },
 ];
+

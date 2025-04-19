@@ -1,4 +1,4 @@
-import { DataBlackHole, getPalette, Palette } from "@spaceshipper/common";
+import { DataBlackHole, getPalette } from "@spaceshipper/common";
 import { ClientEntity } from "./client-entity";
 
 export class ClientBlackHole implements ClientEntity {

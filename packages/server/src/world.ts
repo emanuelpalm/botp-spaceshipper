@@ -4,11 +4,13 @@ import { Lobby } from './scene/lobby.ts';
 import { ProtocolError } from './error.ts';
 import random from './util/random.ts';
 import { Level0 } from './scene/level0.ts';
+import { Level1 } from './scene/level1.ts';
 import { Gallery } from './scene/gallery.ts';
 
 const scenes = [
   new Lobby(),
   new Level0(),
+  new Level1(),
   new Gallery(),
 ];
 
