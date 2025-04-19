@@ -11,17 +11,17 @@ export class ClientSentryShot implements ClientEntity {
   draw(ctx: CanvasRenderingContext2D): void {
     const palette = getPalette(this.data.paletteId);
 
-    const angle = Math.atan2(this.data.dx, this.data.dy);
+    const angle = Math.atan2(this.data.dy, this.data.dx);
 
     ctx.rotate(angle);
 
     ctx.save();
     ctx.translate((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
     ctx.beginPath();
-    ctx.moveTo(0, -2);
-    ctx.lineTo(2, 1);
-    ctx.lineTo(0, 16 + Math.random() * 2);
-    ctx.lineTo(-2, 1);
+    ctx.moveTo(2, 0);
+    ctx.lineTo(1, 2);
+    ctx.lineTo(-16 + Math.random() * 2, 0);
+    ctx.lineTo(1, -2);
     ctx.closePath();
     ctx.globalAlpha = 0.1 + Math.random() * 0.2;
     
@@ -32,10 +32,10 @@ export class ClientSentryShot implements ClientEntity {
 
     ctx.save();
     ctx.beginPath();
-    ctx.moveTo(0, -2);
-    ctx.lineTo(2, 1);
-    ctx.lineTo(0, 12 + Math.random() * 4);
-    ctx.lineTo(-2, 1);
+    ctx.moveTo(2, 0);
+    ctx.lineTo(0, 2);
+    ctx.lineTo(-16 + Math.random() * 2, 0);
+    ctx.lineTo(0, -2);
     ctx.closePath();
 
     ctx.lineWidth = 2;
@@ -48,7 +48,7 @@ export class ClientSentryShot implements ClientEntity {
     ctx.globalAlpha = 0.06 + Math.random() * 0.05;
 
     ctx.beginPath();
-    ctx.arc(0, 1.5, 15, 0, Math.PI * 2);
+    ctx.arc(0, 0, 15, 0, Math.PI * 2);
     ctx.stroke();
   }
 

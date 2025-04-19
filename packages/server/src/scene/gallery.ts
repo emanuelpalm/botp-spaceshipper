@@ -152,7 +152,7 @@ export class Gallery extends Scene {
     enabled: true,
     opacity: 1,
     paletteId: PaletteId.Alpha,
-    angle: Math.PI / 2,
+    angle: 0,
   }
 
   private sentryShot: DataSentryShot = {

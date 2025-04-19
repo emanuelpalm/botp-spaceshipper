@@ -45,8 +45,8 @@ export class ClientSentry implements ClientEntity {
     // Draw canon
     ctx.rotate(this.data.angle);
     ctx.beginPath();
-    ctx.moveTo(0, -ClientSentry.INNER_RADIUS - 10);
-    ctx.lineTo(0, -ClientSentry.INNER_RADIUS - 26);
+    ctx.moveTo(ClientSentry.INNER_RADIUS + 10, 0);
+    ctx.lineTo(ClientSentry.INNER_RADIUS + 26, 0);
     ctx.stroke();
   }
 
