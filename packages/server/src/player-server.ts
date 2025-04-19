@@ -2,6 +2,7 @@ import { DataState, DataStateSimplified } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
 import { ProtocolError } from "./error.ts";
+import { equal } from "./util/equal.ts";
 
 export class PlayerServer {
   public port: number;
@@ -158,11 +159,13 @@ export class PlayerServer {
   }
 
   publishState(state: DataStateSimplified) {
-    this.state = state;
+    if (!equal(this.state, state)) {
+      this.state = state;
 
-    // Notify all connected clients
-    for (const handler of this.stateHandlers.values()) {
-      handler(state);
+      // Notify all connected clients
+      for (const handler of this.stateHandlers.values()) {
+        handler(state);
+      }
     }
   }
 }

@@ -23,8 +23,8 @@ const world = new World();
 // Handle web clients.
 const webServer = new WebServer(WEB_PORT);
 webServer.addListener({
-  onConnect: id => {},
-  onDisconnect: id => {},
+  onConnect: _id => {},
+  onDisconnect: _id => {},
 });
 
 // Handle player clients.
@@ -51,6 +51,10 @@ setInterval(() => {
 
   // Publish the state of the game world to all web clients.
   webServer.publishState(world.state);
+
+  // Publish the simplified state of the game world to all player clients.
+  playerServer.publishState(world.stateSimplified);
+
 }, LOOP_UPDATE_INTERVAL);
 
 // Start servers and readline interface.
