@@ -8,7 +8,7 @@ export class Level2 extends Scene {
     type: DataBackgroundType.Stars,
     width: 960, height: 540,
     starCount: 200,
-    dx: 30 * (Math.random() - 0.5), dy: 30 * (Math.random() - 0.5),
+    dx: 90 * (Math.random() - 0.5), dy: 90 * (Math.random() - 0.5),
   };
 
   override get isPlaying(): boolean {

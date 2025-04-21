@@ -32,8 +32,13 @@ const playerServer = new PlayerServer(PLAYER_PORT);
 playerServer.addListener({
   onJoin: (id, name) => world.join(id, name),
   onLeave: id => world.leave(id),
-  onPlay: (id, dx, dy) => {
-    console.log(`Player ${id} moved: dx=${dx}, dy=${dy}.`);
+  onPlay: (id, ax, ay) => {
+    const player = world.players.get(id);
+    if (!player) {
+      return undefined;
+    }
+    player.ax = ax;
+    player.ay = ay;
     return world.state;
   }
 });

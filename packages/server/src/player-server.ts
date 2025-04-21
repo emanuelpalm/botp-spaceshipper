@@ -77,16 +77,16 @@ export class PlayerServer {
         return;
       }
 
-      const { dx, dy } = req.body;
+      const { ax, ay } = req.body;
 
-      if (typeof dx !== "number" || typeof dy !== "number") {
+      if (typeof ax !== "number" || typeof ay !== "number") {
         res.status(400).json({ error: "Invalid movement vector." });
         return;
       }
 
       let state: DataState | undefined;
       for (const listener of this.listeners) {
-        state = listener.onPlay(id, dx, dy);
+        state = listener.onPlay(id, ax, ay);
       }
       if (!state) {
         res.status(500).json({ error: "Failed to update player state." });
@@ -173,5 +173,5 @@ export class PlayerServer {
 export interface PlayerServerListener {
   onJoin: (id: string, name: string) => void;
   onLeave: (id: string) => void;
-  onPlay: (id: string, dx: number, dy: number) => DataState;
+  onPlay: (id: string, ax: number, ay: number) => DataState | undefined;
 }

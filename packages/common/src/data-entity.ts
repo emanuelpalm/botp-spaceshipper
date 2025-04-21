@@ -37,6 +37,8 @@ export interface DataPlayer extends DataEntity {
   type: DataEntityType.Player;
   name: string;
   score: number;
+  ax: number;
+  ay: number;
 }
 
 export interface DataPortal extends DataEntity {
