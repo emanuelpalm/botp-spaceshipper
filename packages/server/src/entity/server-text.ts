@@ -1,4 +1,4 @@
-import { ServerEntity } from "./server-entity.ts";
+import { ServerEntity } from "./server-entity.js";
 import { DataText } from "@spaceshipper/common";
 
 export class ServerText extends ServerEntity {

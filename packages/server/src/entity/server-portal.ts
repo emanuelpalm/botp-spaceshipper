@@ -1,4 +1,4 @@
-import { ServerEntity } from "./server-entity.ts";
+import { ServerEntity } from "./server-entity.js";
 import { DataPortal } from "@spaceshipper/common";
 
 export class ServerPortal extends ServerEntity {

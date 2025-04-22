@@ -1,8 +1,8 @@
 import { DataState, DataStateSimplified } from "@spaceshipper/common";
 import express, { Express } from "express";
 import { createServer, Server as HttpServer } from "http";
-import { ProtocolError } from "./error.ts";
-import { equal } from "./util/equal.ts";
+import { ProtocolError } from "./error.js";
+import { equal } from "./util/equal.js";
 
 export class PlayerServer {
   public port: number;

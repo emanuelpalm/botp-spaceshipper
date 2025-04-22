@@ -1,8 +1,8 @@
 import readline from "node:readline/promises";
-import { PlayerServer } from "./player-server.ts";
-import { WebServer } from "./web-server.ts";
-import { World } from "./world.ts";
-import { ProtocolError } from "./error.ts";
+import { PlayerServer } from "./player-server.js";
+import { WebServer } from "./web-server.js";
+import { World } from "./world.js";
+import { ProtocolError } from "./error.js";
 
 const LOOP_UPDATE_RATE = 20; // Updates per second
 const LOOP_UPDATE_INTERVAL = 1000 / LOOP_UPDATE_RATE;

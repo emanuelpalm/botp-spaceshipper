@@ -1,12 +1,11 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, DataPlayer, PaletteId } from "@spaceshipper/common";
-import { Scene } from "./scene.ts";
-import { directionTo } from "@spaceshipper/common";
-import { formatTime } from "../util/format.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
-import { ServerSentry } from "../entity/server-sentry.ts";
-import { ServerPortal } from "../entity/server-portal.ts";
-import { ServerText } from "../entity/server-text.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
+import { Scene } from "./scene.js";
+import { formatTime } from "../util/format.js";
+import { ServerEntity } from "../entity/server-entity.js";
+import { ServerSentry } from "../entity/server-sentry.js";
+import { ServerPortal } from "../entity/server-portal.js";
+import { ServerText } from "../entity/server-text.js";
+import { ServerPlayer } from "../entity/server-player.js";
 
 export class Level2 extends Scene {
   override readonly background: DataBackgroundStars = {
@@ -184,8 +183,6 @@ export class Level2 extends Scene {
       player.data.ax = 0;
       player.data.ay = 0;
 
-      [player.data.ax, player.data.ay] = directionTo(player.data.x, player.data.y, round.targetX, round.targetY);
-
       player.data.enabled = true;
     }
 
@@ -273,8 +270,7 @@ export class Level2 extends Scene {
           if (player.data.enabled) {
             if (player.intersectsEntity(this.portalTarget)) {
               this.endRoundForPlayer(player, true);
-            }
-            if (!player.intersectsBackground(this.background) || this.sentry.intersectsShot(player)) {
+            } else if (!player.intersectsBackground(this.background) || this.sentry.intersectsShot(player)) {
               this.endRoundForPlayer(player, false);
             }
           }

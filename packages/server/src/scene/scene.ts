@@ -1,7 +1,7 @@
 import { DataBackground, DataEntity, DataPlayer } from "@spaceshipper/common";
-import { ProtocolError } from "../error.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
+import { ProtocolError } from "../error.js";
+import { ServerPlayer } from "../entity/server-player.js";
+import { ServerEntity } from "../entity/server-entity.js";
 
 export abstract class Scene {
   readonly id: string;

@@ -1,5 +1,5 @@
-import { DataBackground } from "./data-background.ts";
-import { DataEntity } from "./data-entity.ts";
+import { DataBackground } from "./data-background.js";
+import { DataEntity } from "./data-entity.js";
 
 export interface DataState {
   worldId: string;

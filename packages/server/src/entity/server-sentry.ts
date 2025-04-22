@@ -1,6 +1,6 @@
-import { ServerEntity } from "./server-entity.ts";
+import { ServerEntity } from "./server-entity.js";
 import { DataEntityType, DataSentry } from "@spaceshipper/common";
-import { ServerSentryShot } from "./server-sentry-shot.ts";
+import { ServerSentryShot } from "./server-sentry-shot.js";
 import { directionTo } from "@spaceshipper/common";
 
 export class ServerSentry extends ServerEntity {
@@ -11,7 +11,7 @@ export class ServerSentry extends ServerEntity {
   shots: ServerSentryShot[] = [];
   shotIndex: number = 0;
 
-  cooldown: number = 1.5;
+  cooldown: number = 2.5;
   cooldownRemaining: number = this.cooldown;
 
   currentTarget: ServerEntity | undefined;

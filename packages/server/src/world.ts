@@ -1,13 +1,13 @@
 import { DataPlayer, DataState, DataStateSimplified } from '@spaceshipper/common';
-import { Scene } from './scene/scene.ts';
-import { Lobby } from './scene/lobby.ts';
-import { ProtocolError } from './error.ts';
-import random from './util/random.ts';
-import { Level0 } from './scene/level0.ts';
-import { Level1 } from './scene/level1.ts';
-import { Level2 } from './scene/level2.ts';
-import { Gallery } from './scene/gallery.ts';
-import { ServerPlayer } from './entity/server-player.ts';
+import { Scene } from './scene/scene.js';
+import { Lobby } from './scene/lobby.js';
+import { ProtocolError } from './error.js';
+import random from './util/random.js';
+import { Level0 } from './scene/level0.js';
+import { Level1 } from './scene/level1.js';
+import { Level2 } from './scene/level2.js';
+import { Gallery } from './scene/gallery.js';
+import { ServerPlayer } from './entity/server-player.js';
 
 const scenes = [
   new Lobby(),

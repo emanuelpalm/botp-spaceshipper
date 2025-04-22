@@ -1,5 +1,5 @@
 import { accelerate, clamp } from "@spaceshipper/common";
-import { ServerEntity } from "./server-entity.ts";
+import { ServerEntity } from "./server-entity.js";
 import { DataPlayer } from "@spaceshipper/common";
 
 export class ServerPlayer extends ServerEntity {

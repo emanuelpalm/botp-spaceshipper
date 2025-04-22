@@ -1,12 +1,12 @@
 import { DataBackgroundEmpty, DataBackgroundType, DataBlackHole, DataEntity, DataEntityType, DataPlayer, DataPortal, DataSentry, DataSentryShot, DataText, PaletteId } from "@spaceshipper/common";
-import { Scene } from "./scene.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
-import { ServerText } from "../entity/server-text.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
-import { ServerPortal } from "../entity/server-portal.ts";
-import { ServerBlackHole } from "../entity/server-black-hole.ts";
-import { ServerSentry } from "../entity/server-sentry.ts";
-import { ServerSentryShot } from "../entity/server-sentry-shot.ts";
+import { Scene } from "./scene.js";
+import { ServerEntity } from "../entity/server-entity.js";
+import { ServerText } from "../entity/server-text.js";
+import { ServerPlayer } from "../entity/server-player.js";
+import { ServerPortal } from "../entity/server-portal.js";
+import { ServerBlackHole } from "../entity/server-black-hole.js";
+import { ServerSentry } from "../entity/server-sentry.js";
+import { ServerSentryShot } from "../entity/server-sentry-shot.js";
 
 export class Gallery extends Scene {
   override readonly background: DataBackgroundEmpty = {

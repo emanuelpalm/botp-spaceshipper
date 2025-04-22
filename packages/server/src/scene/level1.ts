@@ -1,12 +1,11 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntityType, DataPlayer, PaletteId } from "@spaceshipper/common";
-import { Scene } from "./scene.ts";
-import { directionTo } from "@spaceshipper/common";
-import { formatTime } from "../util/format.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
-import { ServerBlackHole } from "../entity/server-black-hole.ts";
-import { ServerPortal } from "../entity/server-portal.ts";
-import { ServerText } from "../entity/server-text.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
+import { Scene } from "./scene.js";
+import { formatTime } from "../util/format.js";
+import { ServerEntity } from "../entity/server-entity.js";
+import { ServerBlackHole } from "../entity/server-black-hole.js";
+import { ServerPortal } from "../entity/server-portal.js";
+import { ServerText } from "../entity/server-text.js";
+import { ServerPlayer } from "../entity/server-player.js";
 
 export class Level1 extends Scene {
   override readonly background: DataBackgroundStars = {
@@ -184,8 +183,6 @@ export class Level1 extends Scene {
       player.data.ax = 0;
       player.data.ay = 0;
 
-      [player.data.ax, player.data.ay] = directionTo(player.data.x, player.data.y, round.targetX, round.targetY);
-
       player.data.enabled = true;
     }
 
@@ -276,8 +273,10 @@ export class Level1 extends Scene {
         // Handle any players reaching the target, falling into a black hole or exiting the screen.
         for (const player of this.players.values()) {
           if (player.data.enabled) {
-            if (player.intersectsEntity(this.portalTarget) || !player.intersectsBackground(this.background)) {
+            if (player.intersectsEntity(this.portalTarget)) {
               this.endRoundForPlayer(player, true);
+            } else if (!player.intersectsBackground(this.background)) {
+              this.endRoundForPlayer(player, false);
             }
             for (const blackHole of this.blackHoles) {
               if (player.intersectsEntity(blackHole)) {

@@ -1,4 +1,4 @@
-import { PaletteId } from "./palette.ts";
+import { PaletteId } from "./palette.js";
 
 export interface DataEntity {
   id: string;

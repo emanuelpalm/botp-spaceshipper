@@ -1,8 +1,8 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntity, DataEntityType, DataPlayer, getPlayerPaletteId, PaletteId } from "@spaceshipper/common";
-import { Scene } from "./scene.ts";
-import { ServerEntity } from "../entity/server-entity.ts";
-import { ServerText } from "../entity/server-text.ts";
-import { ServerPlayer } from "../entity/server-player.ts";
+import { Scene } from "./scene.js";
+import { ServerEntity } from "../entity/server-entity.js";
+import { ServerText } from "../entity/server-text.js";
+import { ServerPlayer } from "../entity/server-player.js";
 
 export class Lobby extends Scene {
   override readonly background: DataBackgroundStars = {

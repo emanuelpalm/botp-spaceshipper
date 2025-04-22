@@ -1,4 +1,4 @@
-import { ServerEntity } from "./server-entity.ts";
+import { ServerEntity } from "./server-entity.js";
 import { DataBlackHole } from "@spaceshipper/common";
 
 export class ServerBlackHole extends ServerEntity {
