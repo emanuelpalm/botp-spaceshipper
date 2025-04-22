@@ -1,17 +1,19 @@
 import { DataBackground, DataEntity, DataPlayer } from "@spaceshipper/common";
 import { ProtocolError } from "../error.ts";
+import { ServerPlayer } from "../entity/server-player.ts";
+import { ServerEntity } from "../entity/server-entity.ts";
 
 export abstract class Scene {
   readonly id: string;
-  readonly players: Map<DataPlayer["id"], DataPlayer> = new Map();
+  readonly players: Map<DataPlayer["id"], ServerPlayer> = new Map();
 
   abstract readonly background: DataBackground;
 
   abstract readonly isPlaying: boolean;
 
-  protected abstract readonly nonPlayerEntities: DataEntity[];
+  protected abstract readonly nonPlayerEntities: ServerEntity[];
 
-  get entities(): DataEntity[] {
+  get entities(): ServerEntity[] {
     return [...this.nonPlayerEntities, ...this.players.values()];
   }
 
@@ -28,9 +30,7 @@ export abstract class Scene {
   leave(playerId: DataPlayer["id"]): void {
     const player = this.players.get(playerId);
     if (player) {
-      player.opacity = 0;
-      player.dx = 0;
-      player.dy = 0;
+      player.data.enabled = false;
     }
   }
 

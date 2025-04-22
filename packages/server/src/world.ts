@@ -7,6 +7,7 @@ import { Level0 } from './scene/level0.ts';
 import { Level1 } from './scene/level1.ts';
 import { Level2 } from './scene/level2.ts';
 import { Gallery } from './scene/gallery.ts';
+import { ServerPlayer } from './entity/server-player.ts';
 
 const scenes = [
   new Lobby(),
@@ -21,7 +22,7 @@ const mapIdToScene: Map<Scene["id"], Scene> = new Map(scenes.map(scene => [scene
 export class World {
   readonly id: string = random.createId();
 
-  get players(): Map<DataPlayer["id"], DataPlayer> {
+  get players(): Map<DataPlayer["id"], ServerPlayer> {
     return this._scene.players;
   }
 
@@ -41,7 +42,7 @@ export class World {
       sceneId: this._scene.id,
       isPlaying: this._scene.isPlaying,
       background: this._scene.background,
-      entities: this._scene.entities,
+      entities: this._scene.entities.map(entity => entity.data),
     };
   }
 
@@ -61,7 +62,7 @@ export class World {
     if (this._scene !== scene) {
       scene.players.clear();
       for (const player of this._scene.players.values()) {
-        scene.players.set(player.id, player);
+        scene.players.set(player.data.id, player);
       }
       this._scene.players.clear();
       this._scene = scene;

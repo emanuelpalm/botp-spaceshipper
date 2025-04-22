@@ -1,5 +1,8 @@
 import { DataBackgroundStars, DataBackgroundType, DataEntity, DataEntityType, DataPlayer, getPlayerPaletteId, PaletteId } from "@spaceshipper/common";
 import { Scene } from "./scene.ts";
+import { ServerEntity } from "../entity/server-entity.ts";
+import { ServerText } from "../entity/server-text.ts";
+import { ServerPlayer } from "../entity/server-player.ts";
 
 export class Lobby extends Scene {
   override readonly background: DataBackgroundStars = {
@@ -11,9 +14,9 @@ export class Lobby extends Scene {
 
   override readonly isPlaying: boolean = false;
 
-  override readonly nonPlayerEntities: DataEntity[];
+  override readonly nonPlayerEntities: ServerEntity[];
 
-  private textTitle = {
+  private textTitle = new ServerText({
     id: "textTitle",
     type: DataEntityType.Text,
     x: 480, y: 200,
@@ -23,9 +26,9 @@ export class Lobby extends Scene {
     paletteId: PaletteId.Delta,
     font: "Smoosh Sans", fontSize: 72, fontWeight: 100,
     text: "Battle of the Prompts",
-  };
+  });
 
-  private textSubtitle = {
+  private textSubtitle = new ServerText({
     id: "textSubtitle",
     type: DataEntityType.Text,
     x: 480, y: 260,
@@ -35,9 +38,9 @@ export class Lobby extends Scene {
     paletteId: PaletteId.Gamma,
     font: "Oxanium", fontSize: 35, fontWeight: 400,
     text: "The Spaceshipper Challenge",
-  };
+  });
 
-  private textWaiting = {
+  private textWaiting = new ServerText({
     id: "textWaiting",
     type: DataEntityType.Text,
     x: 480, y: 312,
@@ -47,7 +50,7 @@ export class Lobby extends Scene {
     paletteId: PaletteId.Gamma,
     font: "Smoosh Sans", fontSize: 24, fontWeight: 500,
     text: "Waiting for players to join ...",
-  };
+  });
 
   private time: number = 0;
 
@@ -71,18 +74,19 @@ export class Lobby extends Scene {
     this.positionPlayers();
   }
 
-  private createPlayer(id: DataPlayer["id"], name: DataPlayer["name"]): DataPlayer {
-    return {
+  private createPlayer(id: DataPlayer["id"], name: DataPlayer["name"]): ServerPlayer {
+    return new ServerPlayer({
       id,
       type: DataEntityType.Player,
       x: 0, y: 0,
       dx: 0, dy: 0,
+      ax: 0, ay: 0,
       enabled: false,
       opacity: 1,
       paletteId: getPlayerPaletteId(this.players.size),
       name,
       score: 0,
-    };
+    });
   }
 
   positionPlayers(playersPerRow: number = 8) {
@@ -102,13 +106,13 @@ export class Lobby extends Scene {
 
         const player = players[i];
 
-        player.x = 480 - (90 * (xLength - 1)) / 2 + (xIndex * 90);
-        player.y = 394 + (yIndex * 80);
+        player.data.x = 480 - (90 * (xLength - 1)) / 2 + (xIndex * 90);
+        player.data.y = 394 + (yIndex * 80);
 
-        player.dx = 0;
-        player.dy = 0.0001;
+        player.data.dx = 0;
+        player.data.dy = 0.0001;
 
-        player.enabled = true;
+        player.data.enabled = true;
       }
     }
   }
@@ -117,6 +121,6 @@ export class Lobby extends Scene {
     this.time += dt;
 
     // Make the waiting text blink.
-    this.textWaiting.enabled = (this.time & 1) === 1;
+    this.textWaiting.data.enabled = (this.time & 1) === 1;
   }
 }

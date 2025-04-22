@@ -37,8 +37,8 @@ playerServer.addListener({
     if (!player) {
       return undefined;
     }
-    player.ax = ax;
-    player.ay = ay;
+    player.data.ax = ax;
+    player.data.ay = ay;
     return world.state;
   }
 });
@@ -106,7 +106,7 @@ setInterval(() => {
           if (args[1] === "--list") {
             console.log("Connected players:");
             for (const player of world.players.values()) {
-              console.log(`- id: ${player.id}, name: ${player.name}, score: ${player.score}`);
+              console.log(`- id: ${player.data.id}, name: ${player.data.name}, score: ${player.data.score}`);
             }
           } else {
             console.log("Usage: player --list");

@@ -1,19 +1,19 @@
 import { ClientEntity } from "./client-entity";
-import { DataPlayer, getPalette } from "@spaceshipper/common";
+import { accelerate, clamp, DataPlayer, getPalette } from "@spaceshipper/common";
 
 export class ClientPlayer implements ClientEntity {
-  public data: DataPlayer;
+  data: DataPlayer;
 
   constructor(data: DataPlayer) {
     this.data = data;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    // Calculate rotation angle based on velocity
+    // Calculate rotation angle based on velocity.
     const angle = Math.atan2(this.data.dy, this.data.dx) - Math.PI / 2;
 
-    // Calculate intensity (0 to 1) based on velocity
-    const intensity = (1 - 1 / (Math.sqrt(this.data.dx * this.data.dx + this.data.dy * this.data.dy) / 300 + 1));
+    // Calculate intensity (0 to 1) based on velocity.
+    const intensity = Math.sqrt(this.data.dx * this.data.dx + this.data.dy * this.data.dy) / 200;
 
     const palette = getPalette(this.data.paletteId);
 
@@ -127,6 +127,9 @@ export class ClientPlayer implements ClientEntity {
   }
 
   update(dt: number): void {
+    [this.data.ax, this.data.ay] = clamp(this.data.ax, this.data.ay, 0, 1);
+    [this.data.dx, this.data.dy] = accelerate(this.data.dx, this.data.dy, this.data.ax, this.data.ay, 200, 200 * dt);
+
     this.data.x += this.data.dx * dt;
     this.data.y += this.data.dy * dt;
   }
