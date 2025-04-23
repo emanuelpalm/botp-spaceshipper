@@ -55,7 +55,7 @@ export interface PlayerClientStateSimplified {
 
 export class PlayerClient {
   readonly baseUrl: string;
-  readonly id: string = crypto.randomBytes(12).toString('base64');
+  readonly id: string = crypto.randomBytes(12).toString('base64url');
   readonly name: string;
 
   constructor(options: PlayerClientOptions) {
