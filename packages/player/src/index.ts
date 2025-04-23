@@ -1,11 +1,17 @@
 import { OllamaClient } from "./ollama-client.js";
 import { PlayerClient } from "./player-client.js";
 
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+
 let isPlaying = false;
 
 async function main() {
+  const playerId = await loadOrCreatePlayerId();
+
   const ollamaClient = new OllamaClient();
-  const playerClient = new PlayerClient({ name: "Proompty" });
+  const playerClient = new PlayerClient({ name: "Proompty", id: playerId });
 
   const response = await playerClient.join();
   console.log(response.message);
@@ -40,28 +46,42 @@ async function play(playerClient: PlayerClient, ollamaClient: OllamaClient) {
     }
 
     const chatResponse = await ollamaClient.chat({
-      model: 'gemma3',
+      model: 'llama3.2:3b',
       messages: [
         {
           role: "user",
-          content: `Given the current position (${player.x}, ${player.y}) and the target position (${target.x}, ${target.y}), what vector should you apply to the current position to make it approach the target position?`,
+          content: `You are at (${player.x}, ${player.y}) and need to go to (${target.x}, ${target.y}). Provide a vector (ax, ay) for approaching the target.`,
         },
       ],
       format: {
         type: "object",
         properties: {
-          dx: { type: "number" },
-          dy: { type: "number" }
+          ax: { type: "number" },
+          ay: { type: "number" }
         },
-        required: ["dx", "dy"]
+        required: ["ax", "ay"]
       },
       stream: false,
     });
 
-    const { dx, dy } = JSON.parse(chatResponse.message.content);
-    console.log(`Let's go towards (${dx}, ${dy})!`);
-    state = await playerClient.play(dx, dy);
+    const { ax, ay } = JSON.parse(chatResponse.message.content);
+    console.log(`Let's go towards (${ax}, ${ay})!`);
+    state = await playerClient.play(ax, ay);
   }
+}
+
+async function loadOrCreatePlayerId(): Promise<string> {
+  const filePath = path.join(process.cwd(), ".playerid.txt");
+  try {
+    const data = await fs.promises.readFile(filePath, "utf-8");
+    const id = data.trim();
+    if (id) return id;
+  } catch (err) {
+    // File does not exist or is invalid
+  }
+  const newId = crypto.randomBytes(12).toString("base64url");
+  await fs.promises.writeFile(filePath, newId, "utf-8");
+  return newId;
 }
 
 main();

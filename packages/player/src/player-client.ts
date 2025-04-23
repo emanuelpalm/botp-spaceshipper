@@ -4,6 +4,7 @@ import { EventSource } from 'eventsource';
 
 export interface PlayerClientOptions {
   baseUrl?: string;
+  id: string;
   name: string;
 }
 
@@ -55,11 +56,12 @@ export interface PlayerClientStateSimplified {
 
 export class PlayerClient {
   readonly baseUrl: string;
-  readonly id: string = crypto.randomBytes(12).toString('base64url');
+  readonly id: string;
   readonly name: string;
 
   constructor(options: PlayerClientOptions) {
     this.baseUrl = options.baseUrl?.replace(/\/$/, '') ?? 'http://localhost:3001';
+    this.id = options.id;
     this.name = options.name;
   }
 
