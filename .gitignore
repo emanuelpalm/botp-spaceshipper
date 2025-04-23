@@ -1,3 +1,4 @@
 dist/
 node_modules/
 .playerid.txt
+__pycache__

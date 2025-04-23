@@ -11,7 +11,7 @@ async function main() {
   const playerId = await loadOrCreatePlayerId();
 
   const ollamaClient = new OllamaClient();
-  const playerClient = new PlayerClient({ name: "Proompty", id: playerId });
+  const playerClient = new PlayerClient({ name: "Typistas", id: playerId });
 
   const response = await playerClient.join();
   console.log(response.message);
